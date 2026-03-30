@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookings</title>
+    <link rel="stylesheet" href="d2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body style="margin: 0;font-family: Arial, sans-serif; background-color: #e6e6f3; display: flex;">
+
+    <aside class="sidebar">
+        <div class="brand" style="display: flex; align-items: center; gap: 10px; margin-bottom: 40px;">
+            <span class="brand-logo">🏟️</span>
+            <div>
+                <h3 class="brand-name" style="margin: 0; font-size: 16px;">Elite Sports</h3>
+                <p class="brand-sub" style="margin: 0; font-size: 12px; color: #999;">Booking System</p>
+            </div>
+        </div>
+
+        <nav class="side-nav" style="display: flex; flex-direction: column; gap: 5px;">
+            <a href="d2.html" class="nav-link">📊 Dashboard</a>
+            <a href="book.html" class="nav-link active">📅 Bookings</a>
+            <a href="subscription.html" class="nav-link">💳 Subscription</a>
+            <a href="contact.html" class="nav-link">📞 Contact Us</a>
+        </nav>
+    </aside>
+
+    <main class="main-content" style="margin-left: 240px; width: calc(100% - 240px); padding: 20px;">
+        <div class="dashboard-container" style=" margin: 0 auto; width: 100%;">
+
+            <div class="top-header">
+                <div class="user-info" id="userMenu">
+                    <span id="userName">HarshVardhan Parashar</span>
+                    <div class="user-circle" id="userCircle"></div>
+                    <span id="dropdownArrow" style=" transition: transform 0.3s; display: inline-block;">▾</span>
+                    <div id="profileDropdown" class="user-dropdown">
+                        <a href="#"><span>👤</span>Profile</a>
+                        <a href="#"><span>⚙️</span>Settings</a>
+                        <hr style=" border: 0; border-top: 1px solid #eee; margin: 0;">
+                        <a href="login.html" style="color: red;"><span>🚪</span>Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="page-title">
+            <h1>Book a Court</h1>
+            <p>Select your sport, time, and player details</p>
+        </section>
+        <div class="coins"
+            style="background-color:#EFF6FF; border: 1px solid #DBEAFE; border-radius: 8px; padding: 12px 20px; display: inline-flex; align-items: center; color: #3B82F6; font-weight: 500;">
+            <span style="font-size: medium; font-weight: bold;"> 💰 Available Coins: </span>
+            <div class="coin-amount" style="margin-left: auto; font-weight: bold;">100</div>
+        </div>
+        <br><br>
+        <div class="form-header"
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: -20px;">
+            <div class="stepper-wrapper">
+                <div id="step1" class="step-container">
+                    <div
+                        style="width: 32px; height:32px; border-radius: 19999px; display: flex; align-items: center; justify-content: center; background-color: #2563eb; color: #fff; font-weight: 700;">
+                        1</div>
+                    <span style="display: inline; margin-top: 8px; color: #2563eb; font-weight: 500;">Select
+                        Sport</span>
+                </div>
+
+                <div class="line" id="line-1"></div>
+                <div id="step2" class="step-container">
+                    <div class="circle">2</div>
+                    <span class="label">Choose Date & Time</span>
+                </div>
+
+                <div class="line" id="line-2"></div>
+                <div id="step3" class="step-container">
+                    <div class="circle" style="background-color: white;">3</div>
+                    <span class="label">Player Details</span>
+                </div>
+
+                <div class="line" id="line-3"></div>
+                <div id="step4" class="step-container">
+                    <div class="circle">4</div>
+                    <span class="label">Confirm</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-content-card"
+            style="background-color: #fff; border: 1px solid #eee; border-radius: 12px; padding: 20px;margin-top: 60px;">
+            <div id="content-1" class="content-section">
+                <h3>Select a Sport</h3>
+                <div class="sport-grid">
+                    <div class="sport-card " data-sport="Basketball" data-price="100">
+                        <i class="fas fa-check-circle select-check"></i>
+                        <strong>Basketball</strong>
+                        <p style="color:#6b7280; font-size:12px">Indoor</p>
+                        <div style="display:flex; justify-content:space-between; font-size:13px">
+                            <span>Courts:</span><span style="color:#2563eb; font-weight:bold">3</span>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px">
+                            <span>Rate:</span><span style="color:#2563eb; font-weight:bold">100 coins/hr</span>
+                        </div>
+                    </div>
+                    <div class="sport-card" data-sport="Tennis" data-price="40">
+                        <i class="fas fa-check-circle select-check"></i>
+                        <strong>Tennis</strong>
+                        <p style="color:#6b7280; font-size:12px">Outdoor</p>
+                        <div style="display:flex; justify-content:space-between; font-size:13px">
+                            <span>Courts:</span><span style="color:#2563eb; font-weight:bold">1</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px;">
+                            <span>Rate:</span><span style="color:#2563eb; font-weight:bold;">40 coins/hr</span>
+                        </div>
+                    </div>
+                    <div class="sport-card" data-sport="Tennis" data-price="40">
+                        <i class="fas fa-check-circle select-check"></i>
+                        <strong>Cricket</strong>
+                        <p style="color:#6b7280; font-size:12px">Outdoor</p>
+                        <div style="display:flex; justify-content:space-between; font-size:13px">
+                            <span>Courts:</span><span style="color:#2563eb; font-weight:bold">1</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px;">
+                            <span>Rate:</span><span style="color:#2563eb; font-weight:bold;">100 coins/hr</span>
+                        </div>
+                    </div>
+                    <div class="sport-card" data-sport="Tennis" data-price="40">
+                        <i class="fas fa-check-circle select-check"></i>
+                        <strong>Badminton</strong>
+                        <p style="color:#6b7280; font-size:12px">Indoor</p>
+                        <div style="display:flex; justify-content:space-between; font-size:13px">
+                            <span>Courts:</span><span style="color:#2563eb; font-weight:bold">2</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px;">
+                            <span>Rate:</span><span style="color:#2563eb; font-weight:bold;">40 coins/hr</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button id="next-btn-1" class="btn btn-next" type="button">Next</button>
+                </div>
+            </div>
+            <div id="content-2" class="content-section " style="display:block;">
+                <h3>Choose Date & Time Slot</h3>
+                <div style="display: flex; gap: 24px; align-items: flex-end;">
+                    <div id="date-div" style="flex: 1;">
+                        <label for="date-input" style="font-size: 13px; color: #6b7280;"><span>🗓 Select
+                                Date:</span><br></label>
+                        <input type="date" id="date-input" name="date-input"
+                            style="margin-top: 8px; margin-bottom: 20px; width: 100%;">
+                    </div>
+                    <div id="time-div" style="flex: 1;">
+                        <label for="time-slot" style="font-size: 13px; color: #6b7280;"><span> ⏱ Select
+                                Time Slot:</span></label><br>
+                        <select id="time-slot" name="time-slot"
+                            style="margin-top: 8px; margin-bottom: 20px; width: 100%;">
+                            <option value="">--Select Time Slot--</option>
+                            <option value="9-10">9:00 AM - 10:00 AM</option>
+                            <option value="10-11">10:00 AM - 11:00 AM</option>
+                            <option value="11-12">11:00 AM - 12:00 PM</option>
+                            <option value="12-1">12:00 PM - 1:00 PM</option>
+                            <option value="1-2">1:00 PM - 2:00 PM</option>
+                            <option value="2-3">2:00 PM - 3:00 PM</option>
+                            <option value="3-4">3:00 PM - 4:00 PM</option>
+                            <option value="4-5">4:00 PM - 5:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button id="back-btn-2" class="btn btn-back">Back</button>
+                    <button id="next-btn-2" class="btn btn-next">Next</button>
+                </div>
+            </div>
+            <div id="content-3" class="content-section" style="display:block;">
+                <h3>Player Details</h3>
+                <div id="player-div" style="flex: 1;">
+                    <label for="player-count" style="font-size: 13px; color: #6b7280;"><span>👥 Number of
+                            Players:</span><br></label>
+                    <input type="number" id="player-count" name="player-count" min="1"
+                        style="margin-top: 8px; margin-bottom: 20px; width: 200px;">
+                </div>
+                <div id="player-details"
+                    style="width: 800px;padding:25px 20px; background-color: #f9fafb; border-radius: 10px; display:none;">
+                </div>
+                <div class="btn-group">
+                    <button id="back-btn-3" class="btn btn-back">Back</button>
+                    <button id="next-btn-3" class="btn btn-next">Next</button>
+                </div>
+            </div>
+            <div id="content-4" class="content-section" style="display:block;">
+                <h3>Confirm Your Booking</h3>
+                <div id="booking-summary"
+                    style="background: #fafbfc; border-radius: 16px; padding: 12px 36px; margin-top: 18px;font-size: 1em; border: 1px solid #eee;">
+                    <h4 style="font-size: 1.2em; font-weight: bold; margin-bottom: 25px; color: #222;">Booking
+                        Summary</h4>
+                    <div style="display: grid; row-gap: 7px; font-size: 15px; color: #999;">
+                        <div>Sport:</div>
+                        <div id="summary-sport" style="text-align: right; font-weight: 500;"></div>
+                        <div>Date:</div>
+                        <div id="summary-date" style="text-align: right; font-weight: 500;"></div>
+                        <div>Time Slot:</div>
+                        <div id="summary-slot" style="text-align: right; font-weight: 500;"></div>
+                        <div>Players:</div>
+                        <div id="summary-players" style="text-align: right; font-weight: 500;"></div>
+                    </div>
+                </div>
+                <div id="coin-div"></div>
+                <div class="btn-group">
+                    <button id="back-btn-4" class="btn btn-back">Back</button>
+                    <button id="confirm-booking-btn" class="btn btn-confirm">
+                        <i class="fas fa-check"></i> Confirm Booking
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- </div> -->
+
+    </main>
+</body>
+<script src=" All.js">
+</script>
+<style>
+    .stepper-wrapper {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .step-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+    }
+
+    .select-check {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        color: #2563eb;
+        display: none;
+        font-size: 1.5em;
+        z-index: 2;
+    }
+
+    .sport-card.selected .select-check {
+        display: block;
+    }
+
+    input,
+    select {
+        padding: 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        min-width: 220px;
+        max-width: 350px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    .btn-group {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn {
+        padding: 0.8rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.2s;
+    }
+
+    .back-Btn {
+        background: white;
+        border: 1px solid #e5e7eb;
+        color: #6b7280;
+    }
+
+    .btn-next {
+        background: #2563eb;
+        color: white;
+        margin-left: auto;
+    }
+
+    .btn-confirm {
+        background: #10b981;
+        color: white;
+    }
+
+    .circle {
+        width: 32px;
+        height: 32px;
+        background-color: #fff;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    /* The Text Label */
+    .label {
+        margin-top: 8px;
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    /* The Connecting Line */
+    .line {
+        flex: 1;
+        height: 4px;
+        background-color: #d1d5db;
+        margin: 0 8px;
+        /* Aligns the line with the center of the circles */
+        transform: translateY(-10px);
+    }
+
+    .form-content-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2.5rem;
+        min-height: 450px;
+        position: relative;
+    }
+
+    .sport-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    .sport-card {
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 1.5rem;
+        cursor: pointer;
+        position: relative;
+        transition: 0.2s;
+    }
+
+    .sport-card.selected {
+        border-color: #2563eb;
+        background-color: #eff6ff;
+    }
+
+    .select-check {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        color: #2563eb;
+        display: none;
+        font-size: 1.5em;
+        z-index: 2;
+    }
+
+    .sport-card.selected .select-check {
+        display: block;
+    }
+</style>
+
+</html>

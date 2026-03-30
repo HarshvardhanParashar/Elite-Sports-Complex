@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Sports Complex Dashboard</title>
+    <link rel="stylesheet" href="d2.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body style="margin: 0;font-family: Arial, sans-serif; background-color: #e6e6f3; display: flex;">
+
+    <aside class="sidebar">
+        <div class="brand" style="display: flex; align-items: center; gap: 10px; margin-bottom: 40px;">
+            <span class="brand-logo">🏟️</span>
+            <div>
+                <h3 class="brand-name" style="margin: 0; font-size: 16px;">Elite Sports</h3>
+                <p class="brand-sub" style="margin: 0; font-size: 12px; color: #999;">Booking System</p>
+            </div>
+        </div>
+
+        <nav class="side-nav" style="display: flex; flex-direction: column; gap: 5px;">
+            <a href="d2.html" class="nav-link active">📊 Dashboard</a>
+            <a href="book.html" class="nav-link">📅 Bookings</a>
+            <a href="subscription.html" class="nav-link">💳 Subscription</a>
+            <a href="contact.html" class="nav-link">📞 Contact Us</a>
+        </nav>
+    </aside>
+
+    <main class="main-content" style="margin-left: 240px; width: calc(100% - 240px); padding: 20px;">
+        <div class="dashboard-container" style=" margin: 0 auto; width: 100%;">
+
+            <div class="top-header">
+                <div class="user-info" id="userMenu">
+                    <span id="userName">HarshVardhan Parashar</span>
+                    <div class="user-circle" id="userCircle"></div>
+                    <span id="dropdownArrow" style=" transition: transform 0.3s; display: inline-block;">▾</span>
+                    <div id="profileDropdown" class="user-dropdown">
+                        <a href="#"><span>👤</span>Profile</a>
+                        <a href="#"><span>⚙️</span>Settings</a>
+                        <hr style=" border: 0; border-top: 1px solid #eee; margin: 0;">
+                        <a href="login.html" style="color: red;"><span>🚪</span>Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="page-title">
+            <h1>Dashboard</h1>
+            <p>Welcome back! Here's your overview for today.</p>
+        </section>
+
+        <div class="grid-stats">
+            <div class="stat-box" style="cursor: pointer;" onclick="window.location.href='subscription.html'">
+                <div class="icon-wrap blue-bg">📈</div>
+                <p>Your Coins</p>
+                <h2>100</h2>
+            </div>
+            <div class="stat-box" style="cursor: pointer;" onclick="window.location.href='book.html'">
+                <div class="icon-wrap green-bg">📅</div>
+                <p>Your Bookings</p>
+                <h2>0</h2>
+            </div>
+            <div class="stat-box" style="cursor: pointer;" onclick="scrolltobootom()">
+                <div class="icon-wrap purple-bg">👥</div>
+                <p>Total Courts</p>
+                <h2>15</h2>
+            </div>
+            <div class="stat-box" style="cursor: pointer;" onclick="scrolltobootom()">
+                <div class="icon-wrap orange-bg">🏀</div>
+                <p>Sports Available</p>
+                <h2>5</h2>
+            </div>
+        </div>
+
+        <div class="grid-middle">
+            <div id="weather-card" style="background: #2563eb; width: 380px; padding: 32px; border-radius: 40px; color: #fff; 
+                box-shadow: 0 8px 32px rgba(0,0,0,0.15); font-family: 'Segoe UI', Arial, sans-serif; opacity: 0;
+                transition: opacity 0.5s;">
+                <h2 style="font-size: 2em; font-weight: 500; margin-bottom: 48px;" id="city-name">Detecting
+                    location...</h2>
+
+                <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 40px;">
+                    <div style="display: flex; align-items: center;">
+                        <span id="weather-icon" style="font-size: 2.5em;">☀️</span>
+                        <h1 style="font-size: 3.5em; font-weight: bold;" id="temp">--°C</h1>
+                    </div>
+                    <p style="font-size: 1.5em; margin-top: 16px;" id="description">Fetching data...</p>
+                </div>
+
+                <div style="display: flex; justify-content: flex-start; gap: 32px; font-size: 1.2em;">
+                    <div style="display: flex; align-items: center;">
+                        <span>💧</span> <span id="humidity">--%</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span>💨</span> <span id="wind">-- km/h</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-slots">
+                <div class="card-header">
+                    <strong>Available Slots Today</strong>
+                    <span class="timer">⏱</span>
+                </div>
+                <p class="date-text">Sunday, March 1, 2026</p>
+                <div class="slots-list">
+                    <div class="slot"><span>6:00 AM - 8:00 AM</span> <span class="tag green">12 slots</span></div>
+                    <div class="slot"><span>8:00 AM - 10:00 AM</span> <span class="tag yellow">0 slots</span></div>
+                    <div class="slot"><span>10:00 AM - 12:00 PM</span> <span class="tag green">15 slots</span></div>
+                    <div class="slot"><span>12:00 PM - 2:00 PM</span> <span class="tag yellow">10 slots</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-facility">
+            <h3>Our Sports Facilities</h3>
+            <div class="facility-grid">
+                <div class="facility-item">
+                    <div class="item-head"><strong>Basketball</strong> <br>
+                        <span class="type-blue">indoor</span>
+                    </div>
+                    <p class="count">2 courts</p>
+                    <p class="price">50 coins/hr</p>
+                </div>
+                <div class="facility-item">
+                    <div class="item-head"><strong>Tennis</strong> <br>
+                        <span class="type-green">outdoor</span>
+                    </div>
+                    <p class="count">4 courts</p>
+                    <p class="price">40 coins/hr</p>
+                </div>
+                <div class="facility-item">
+                    <div class="item-head"><strong>Badminton</strong> <br>
+                        <span class="type-blue">indoor</span>
+                    </div>
+                    <p class="count">6 courts</p>
+                    <p class="price">30 coins/hr</p>
+                </div>
+            </div>
+            <div class="summary-bar">
+                📊 We offer 3 different sports with a total of 15 courts. Book your slot now!
+            </div>
+        </div>
+
+    </main>
+</body>
+<script src="All.js"></script>
+
+</html>

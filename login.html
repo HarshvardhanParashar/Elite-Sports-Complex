@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            background-color: #e6e6f3;
+        }
+
+        .container {
+            max-width: 300px;
+            margin: 60px auto;
+            height: auto;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        h1,
+        h2 {
+            margin-bottom: 25px;
+            font-weight: 600;
+            color: black;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        p {
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        .back-arrow {
+            display: block;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+
+        .back-arrow:hover {
+            opacity: 1;
+            transform: translateX(-3px);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #dddddddc;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            ;
+        }
+
+        input:focus {
+            outline: 2px solid #007bff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #0056b3;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.4);
+
+        }
+
+        #menu-section button {
+            background: #0056b3;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            margin-bottom: 10px;
+        }
+
+        #menu-section button:hover {
+            background: white;
+            color: #0056b3;
+            border: 1px solid #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <div id="menu-section">
+            <h1>Elite Sports Booking System</h1>
+            <p>Reserve your arena</p>
+            <button onclick="showSection('login')">Login</button>
+            <button onclick="showSection('signup')">Sign Up</button>
+        </div>
+
+        <div id="login-section" style="display: none;">
+            <span class="back-arrow" onclick="showSection('menu')">← Back</span>
+            <h2>Login</h2>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <button>Submit</button>
+        </div>
+
+        <div id="signup-section" style="display: none;">
+            <span class="back-arrow" onclick="showSection('menu')">← Back</span>
+            <h2>Sign Up</h2>
+            <input type="text" placeholder="Name" required>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <button>Create Account</button>
+        </div>
+
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            document.getElementById('menu-section').style.display = 'none';
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('signup-section').style.display = 'none';
+
+            if (sectionId === 'menu') {
+                document.getElementById('menu-section').style.display = 'block';
+            } else {
+                document.getElementById(sectionId + '-section').style.display = 'block';
+            }
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const text = this.innerText.toLowerCase();
+
+                if (text === 'submit' || text === 'create account') {
+                    const parentDiv = this.parentElement;
+                    const inputs = parentDiv.querySelectorAll('input');
+                    let allFilled = true;
+                    let emailValid = true;
+
+                    inputs.forEach(input => {
+                        if (input.value.trim() === "") allFilled = false;
+                        if (input.type === "email" && !validateEmail(input.value.trim())) emailValid = false;
+                    });
+
+                    if (!allFilled) {
+                        alert("Please fill out all fields.");
+                    } else if (!emailValid) {
+                        alert("Please enter a valid email address.");
+                    } else {
+                        window.location.href = "d2.html";
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
