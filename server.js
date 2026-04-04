@@ -149,3 +149,20 @@ app.get('/my-bookings/:email', async (req, res) => {
         });
     }
 });
+app.delete('/cancel-booking/:id', async (req, res) => {
+    try {
+        await Booking.findByIdAndDelete(req.params.id);
+
+        res.json({
+            success: true,
+            message: "Booking cancelled successfully ❌"
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.json({
+            success: false,
+            message: "Error cancelling booking"
+        });
+    }
+});
