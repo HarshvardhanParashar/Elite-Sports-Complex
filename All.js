@@ -1,4 +1,5 @@
 // Dropdown Menu
+
 const userMenu = document.getElementById('userMenu');
 const profileDropdown = document.getElementById('profileDropdown');
 const dropdownArrow = document.getElementById('dropdownArrow');
@@ -15,8 +16,7 @@ window.onclick = function (event) {
     }
 };
 
-
-//Weather
+//Weather JS
 async function updateWeather() {
     const card = document.getElementById('weather-card');
     const cityName = document.getElementById('city-name');
@@ -38,7 +38,7 @@ async function updateWeather() {
             const geoResponse = await fetch(geoUrl);
             const geoData = await geoResponse.json();
 
-            cityName.innerText = geoData.city || "Current Location";
+            cityName.innerText = geoData.city || geoData.locality || "Current Location";
             document.getElementById('temp').innerText = `${Math.round(current.temperature_2m)}°C`;
             document.getElementById('humidity').innerText = `${current.relative_humidity_2m}%`;
             document.getElementById('wind').innerText = `${current.wind_speed_10m} km/h`;
@@ -78,14 +78,15 @@ function getWeatherDetails(code) {
 updateWeather();
 
 //Logo in user circle
-const userName = document.getElementById('userName').textContent.trim();
-document.getElementById('userCircle').textContent = userName.charAt(0).toUpperCase();
+const name = localStorage.getItem("userName");
 
-scrolltobootom = () => {
-    window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth'
-    });
+if (name) {
+    document.getElementById("userName").innerText = name;
+    document.getElementById("userCircle").innerText = name.charAt(0).toUpperCase();
+} else {
+    // fallback (optional)
+    document.getElementById("userName").innerText = "Guest";
+    document.getElementById("userCircle").innerText = "G";
 }
 
 
@@ -243,39 +244,39 @@ document.getElementById('back-btn-4').onclick = () => showStep(2);
 
 showStep(0);
 
-// Confirmation popover on booking
-document.getElementById('confirm-booking-btn').onclick = function () {
-    let pop = document.createElement('div');
-    pop.id = 'booking-popover';
-    pop.innerHTML = `
-            <div style="
-                position: fixed;
-                top: 30%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: #f0fdf4;
-                border: 2px solid #10b981;
-                border-radius: 16px;
-                padding: 36px 48px;
-                box-shadow: 0 8px 32px rgba(16,185,129,0.15);
-                z-index: 9999;
-                text-align: center;
-            ">
-                <div style="font-size: 2.5em; color: #10b981; margin-bottom: 12px;">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div style="font-size: 1.3em; color: #222; font-weight: bold; margin-bottom: 8px;">
-                    Booking Confirmed!
-                </div>
-                <div style="color: #444; font-size: 1em;">
-                    Thank you for your booking.<br>Your slot has been reserved.
-                </div>
-            </div>
-        `;
-    document.body.appendChild(pop);
+// // Confirmation popover on booking
+// document.getElementById('confirm-booking-btn').onclick = function () {
+//     let pop = document.createElement('div');
+//     pop.id = 'booking-popover';
+//     pop.innerHTML = `
+//             <div style="
+//                 position: fixed;
+//                 top: 30%;
+//                 left: 50%;
+//                 transform: translate(-50%, -50%);
+//                 background: #f0fdf4;
+//                 border: 2px solid #10b981;
+//                 border-radius: 16px;
+//                 padding: 36px 48px;
+//                 box-shadow: 0 8px 32px rgba(16,185,129,0.15);
+//                 z-index: 9999;
+//                 text-align: center;
+//             ">
+//                 <div style="font-size: 2.5em; color: #10b981; margin-bottom: 12px;">
+//                     <i class="fas fa-check-circle"></i>
+//                 </div>
+//                 <div style="font-size: 1.3em; color: #222; font-weight: bold; margin-bottom: 8px;">
+//                     Booking Confirmed!
+//                 </div>
+//                 <div style="color: #444; font-size: 1em;">
+//                     Thank you for your booking.<br>Your slot has been reserved.
+//                 </div>
+//             </div>
+//         `;
+//     document.body.appendChild(pop);
 
-    setTimeout(() => {
-        document.body.removeChild(pop);
-        showStep(0);
-    }, 1000);
-};
+//     setTimeout(() => {
+//         document.body.removeChild(pop);
+//         showStep(0);
+//     }, 1000);
+// };
