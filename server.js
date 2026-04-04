@@ -1,5 +1,7 @@
 
 const User = require('./models/User');
+const Booking = require('./models/Booking');
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -64,7 +66,7 @@ app.post('/login', async (req, res) => {
         const { email, password } = req.body;
 
         // 🔍 Check if user exists
-        const user = await User.findOne({ email });
+        const user = await User.findOne({  email, password });
 
         if (!user) {
             return res.json({
@@ -83,15 +85,67 @@ app.post('/login', async (req, res) => {
 
         // ✅ Login successful
         res.json({
-            success: true,
-            message: "Login successful ✅"
-        });
+    success: true,
+    message: "Login successful",
+    user: {
+        name: user.name,
+        email: user.email
+    }
+});
+
 
     } catch (err) {
         console.log(err);
         res.status(500).json({
             success: false,
             message: "Error logging in"
+        });
+    }
+});
+
+
+app.post('/book', async (req, res) => {
+    try {
+        const { email, sport, date, time, players } = req.body;
+
+        const newBooking = new Booking({
+            email,
+            sport,
+            date,
+            time,
+            players
+        });
+
+        await newBooking.save();
+
+        res.json({
+            success: true,
+            message: "Booking Confirmed ✅"
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.json({
+            success: false,
+            message: "Booking failed ❌"
+        });
+    }
+});
+app.get('/my-bookings/:email', async (req, res) => {
+    try {
+        const email = req.params.email;
+
+        const bookings = await Booking.find({ email });
+
+        res.json({
+            success: true,
+            bookings: bookings
+        });
+
+    } catch (err) {
+        res.json({
+            success: false,
+            message: "Error fetching bookings"
         });
     }
 });
