@@ -96,22 +96,22 @@
                         <strong>Basketball</strong>
                         <p style="color:#6b7280; font-size:12px">Indoor</p>
                         <div style="display:flex; justify-content:space-between; font-size:13px">
-                            <span>Courts:</span><span style="color:#2563eb; font-weight:bold">3</span>
+                            <span>Courts:</span><span style="color:#2563eb; font-weight:bold">2</span>
                         </div>
 
                         <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px">
                             <span>Rate:</span><span style="color:#2563eb; font-weight:bold">100 coins/hr</span>
                         </div>
                     </div>
-                    <div class="sport-card" data-sport="Tennis" data-price="40">
+                    <div class="sport-card" data-sport="Football" data-price="120">
                         <i class="fas fa-check-circle select-check"></i>
-                        <strong>Tennis</strong>
+                        <strong>Football</strong>
                         <p style="color:#6b7280; font-size:12px">Outdoor</p>
                         <div style="display:flex; justify-content:space-between; font-size:13px">
                             <span>Courts:</span><span style="color:#2563eb; font-weight:bold">1</span>
                         </div>
                         <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px;">
-                            <span>Rate:</span><span style="color:#2563eb; font-weight:bold;">40 coins/hr</span>
+                            <span>Rate:</span><span style="color:#2563eb; font-weight:bold;">120 coins/hr</span>
                         </div>
                     </div>
                     <div class="sport-card" data-sport="Cricket" data-price="100">
@@ -125,7 +125,7 @@
                             <span>Rate:</span><span style="color:#2563eb; font-weight:bold;">100 coins/hr</span>
                         </div>
                     </div>
-                    <div class="sport-card" data-sport="Badminton" data-price="40">
+                    <div class="sport-card" data-sport="Badminton" data-price="80">
                         <i class="fas fa-check-circle select-check"></i>
                         <strong>Badminton</strong>
                         <p style="color:#6b7280; font-size:12px">Indoor</p>
@@ -133,7 +133,7 @@
                             <span>Courts:</span><span style="color:#2563eb; font-weight:bold">2</span>
                         </div>
                         <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px;">
-                            <span>Rate:</span><span style="color:#2563eb; font-weight:bold;">40 coins/hr</span>
+                            <span>Rate:</span><span style="color:#2563eb; font-weight:bold;">80 coins/hr</span>
                         </div>
                     </div>
                 </div>
@@ -141,8 +141,8 @@
                     <button id="next-btn-1" class="btn btn-next" type="button">Next</button>
                 </div>
             </div>
-                
-                
+
+
 
             <div id="content-2" class="content-section " style="display:block;">
                 <h3>Choose Date & Time Slot</h3>
@@ -170,7 +170,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="btn-group">
                     <button id="back-btn-2" class="btn btn-back">Back</button>
                     <button id="next-btn-2" class="btn btn-next">Next</button>
@@ -212,162 +212,232 @@
                 <div id="coin-div"></div>
                 <div class="btn-group">
                     <button id="back-btn-4" class="btn btn-back">Back</button>
-                    <button onclick="confirmBooking()" class="btn btn-confirm"> 
+                    <button onclick="confirmBooking()" class="btn btn-confirm">
                         <i class="fas fa-check"></i> Confirm Booking
                     </button>
                 </div>
             </div>
         </div>
-<div class="form-content-card" style="margin-top: 30px;">
-    <h3>My Bookings</h3>
-    <div id="bookingsList"></div>
-</div>
+        <br><br>
+        <h2>My Bookings</h2>
+        <div id="bookingsList"></div>
 
-</main>
+    </main>
 </body>
 <script src=" All.js"></script>
 <script>
     let selectedSport = "";
 
-// Select sport
-document.querySelectorAll('.sport-card').forEach(card => {
-    card.addEventListener('click', function () {
-        document.querySelectorAll('.sport-card').forEach(c => c.classList.remove('selected'));
-        this.classList.add('selected');
+    // Select sport
+    document.querySelectorAll('.sport-card').forEach(card => {
+        card.addEventListener('click', function () {
+            document.querySelectorAll('.sport-card').forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
 
-        selectedSport = this.getAttribute('data-sport');
-    });
-});
-
-//Booking Function
-async function confirmBooking() {
-    const date = document.getElementById("date-input").value;
-    const time = document.getElementById("time-slot").value;
-    const players = document.getElementById("player-count").value;
-
-    const email = localStorage.getItem("userEmail");
-
-    if (!selectedSport || !date || !time || !players) {
-        alert("Fill all details");
-        return;
-    }
-const playersData = [];
-
-const count = parseInt(players);
-
-for (let i = 1; i <= count; i++) {
-    const name = document.querySelector(`[name="player${i}_name"]`)?.value;
-    const mobile = document.querySelector(`[name="player${i}_mobile"]`)?.value;
-    const emailP = document.querySelector(`[name="player${i}_email"]`)?.value;
-
-    playersData.push({
-        name,
-        mobile,
-        email: emailP
-    });
-}
-
-    const res = await fetch("http://localhost:5000/book", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            email,
-            sport: selectedSport,
-            date,
-            time,
-            players,
-             playersData 
-        })
+            selectedSport = this.getAttribute('data-sport');
+        });
     });
 
-    const data = await res.json();
-    alert(data.message);
+    //Booking Function
+    async function confirmBooking() {
+        const date = document.getElementById("date-input").value;
+        const time = document.getElementById("time-slot").value;
+        const players = document.getElementById("player-count").value;
 
-    if (data.success) {
-    loadBookings();
-}
+        const email = localStorage.getItem("userEmail");
 
-}
-
-async function loadBookings() {
-    const email = localStorage.getItem("userEmail");
-    const container = document.getElementById("bookingsList");
-
-    try {
-        const res = await fetch(`http://localhost:5000/my-bookings/${email}`);
-        const data = await res.json();
-
-        container.innerHTML = "";
-
-        if (!data.bookings || data.bookings.length === 0) {
-            container.innerHTML = "No bookings yet";
+        if (!selectedSport || !date || !time || !players) {
+            alert("Fill all details");
             return;
         }
+        const playersData = [];
 
-        data.bookings.forEach(b => {
-            const div = document.createElement("div");
+        const count = parseInt(players);
 
-         
-            div.innerHTML = `
-    <div class="booking-top">
-        <strong>${b.sport}</strong>
-        <span class="booking-status">Confirmed</span>
-    </div>
+        for (let i = 1; i <= count; i++) {
+            const name = document.querySelector(`[name="player${i}_name"]`)?.value;
+            const mobile = document.querySelector(`[name="player${i}_mobile"]`)?.value;
+            const emailP = document.querySelector(`[name="player${i}_email"]`)?.value;
 
-    <div class="booking-content">
-        📅 ${b.date} | ⏱ ${b.time} | 👥 ${b.players} Players
-        <br><br>
+            playersData.push({
+                name,
+                mobile,
+                email: emailP
+            });
+        }
 
-        ${b.playersData.map(p => `
-            👤 ${p.name} | 📞 ${p.mobile} | ✉️ ${p.email}<br>
-        `).join("")}
-    </div>
-
-    <div class="booking-actions">
-        <button class="cancel-btn" onclick="cancelBooking('${b._id}')">Cancel</button>
-    </div>
-
-
-            `;
-
-            container.appendChild(div);
-        });
-
-    } catch (err) {
-        container.innerHTML = "Error loading bookings";
-    }
-}
-window.onload = function () {
-    loadBookings();
-};
-async function cancelBooking(id) {
-
-    const confirmDelete = confirm("Are you sure you want to cancel this booking?");
-    if (!confirmDelete) return;
-
-    try {
-        const res = await fetch(`http://localhost:5000/cancel-booking/${id}`, {
-            method: "DELETE"
+        const res = await fetch("http://localhost:5000/book", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email,
+                sport: selectedSport,
+                date,
+                time,
+                players,
+                playersData
+            })
         });
 
         const data = await res.json();
-
-        alert(data.message);
-
+        showBookingPopover(data.message);
         if (data.success) {
-            loadBookings(); // 🔥 refresh list
+            loadBookings();
         }
 
-    } catch (err) {
-        alert("Error cancelling booking");
-        console.log(err);
     }
-}
+    function rescheduleBooking(id) {
+        alert("Reschedule feature coming soon 😄");
+    }
+
+    async function loadBookings() {
+        const email = localStorage.getItem("userEmail");
+        const container = document.getElementById("bookingsList");
+
+        try {
+            const res = await fetch(`http://localhost:5000/my-bookings/${email}`);
+            const data = await res.json();
+
+            container.innerHTML = "";
+
+            if (!data.bookings || data.bookings.length === 0) {
+                return;
+            }
+
+            const now = new Date();
+
+            // Filter only future bookings
+            const futureBookings = data.bookings.filter(b => {
+                const [startHour] = b.time.split("-").map(Number);
+
+                // Convert PM hours to 24h if needed
+                let bookingHour = startHour;
+                if (startHour >= 1 && startHour <= 4) bookingHour += 12;
+
+                const bookingDate = new Date(`${b.date}T00:00`);
+
+                return bookingDate > now ||
+                    (bookingDate.toDateString() === now.toDateString() && bookingHour > now.getHours());
+            });
+
+            if (futureBookings.length === 0) {
+                container.innerHTML = ""; // Will trigger the CSS :empty content
+                return;
+            }
+
+            futureBookings.forEach((b, index) => {
+                const card = document.createElement("div");
+                card.className = "booking-card";
+
+                card.innerHTML = `
+                <div class="booking-top">
+                    <div class="booking-title">
+                        <strong>${b.sport}</strong>
+                        <span class="status-badge">Confirmed</span>
+                    </div>
+                </div>
+
+                <div class="booking-details">
+                    <div>
+                        <span class="label">Date</span>
+                        <div>${b.date}</div>
+                    </div>
+
+                    <div>
+                        <span class="label">Time</span>
+                        <div>${b.time}</div>
+                    </div>
+
+                    <div>
+                        <span class="label">Players</span>
+                        <div>${b.players}</div>
+                    </div>
+
+                    <div>
+                        <span class="label">Cost</span>
+                        <div class="cost">100 coins</div>
+                    </div>
+                </div>
+            `;
+                container.appendChild(card);
+            });
+
+        } catch (err) {
+            container.innerHTML = "Error loading bookings";
+            console.error(err);
+        }
+    }
+    window.onload = function () {
+        loadBookings();
+    };
 
 </script>
 <style>
+    #bookingsList {
+        margin-top: 200px;
+    }
+
+    /* Card */
+    .booking-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 20px 25px;
+        margin-bottom: 105px;
+        transition: 0.2s;
+        margin-left: -20px;
+        margin-top: -105px;
+        position: relative;
+    }
+
+
+    /* Top */
+    .booking-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    /* Title */
+    .booking-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 18px;
+    }
+
+    /* Badge */
+    .status-badge {
+        background: #dcfce7;
+        color: #16a34a;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+    }
+
+    /* Details */
+    .booking-details {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+    }
+
+    /* Label */
+    .label {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    /* Cost */
+    .cost {
+        color: #2563eb;
+        font-weight: bold;
+    }
+
+
     .stepper-wrapper {
         display: flex;
         align-items: center;
@@ -517,100 +587,98 @@ async function cancelBooking(id) {
     .sport-card.selected .select-check {
         display: block;
     }
+
     .section-divider {
-    margin: 40px 0 20px 0;
-    border: none;
-    border-top: 1px solid #eee;
-}
-/* Container spacing */
-#bookingsList {
-    margin-top: 135px;
-    margin-left: 478px;
-}
+        margin: 40px 0 20px 0;
+        border: none;
+        border-top: 1px solid #eee;
+    }
 
-/* Each booking item */
-#bookingsList div {
-    padding: 15px;
-    margin-bottom: 12px;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    background-color: #ffffff;
-}
+    /* Container spacing */
+    #bookingsList {
+        margin-top: 135px;
+        margin-left: 20px;
+    }
 
-/* Hover effect (same feel as cards) */
-#bookingsList div:hover {
-    background-color: #f9fafb;
-}
-
-/* Divider line */
-#bookingsList hr {
-    border: none;
-    border-top: 1px solid #eee;
-    margin-top: 10px;
-}
-
-/* Empty text */
-#bookingsList:empty::before {
-    content: "No bookings yet";
-    display: block;
-    text-align: center;
-    color: #6b7280;
-    padding: 20px;
-}
-* Top row */
-.booking-top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-}
-
-/* Sport name */
-.booking-sport {
-    font-size: 16px;
-    color: #111827;
-}
-
-/* Status badge */
-.booking-status {
-    background: #dcfce7;
-    color: #16a34a;
-    padding: 3px 8px;
-    border-radius: 999px;
-    font-size: 12px;
-}
-
-/* Details */
-.booking-details {
-    color: #4b5563;
-    line-height: 1.6;
-}
-
-/* Bottom actions */
-.booking-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
-}
-.booking-content {
-    font-size: 14px;
-    color: #374151;
-    line-height: 1.6;
-}
-
-/* Cancel button */
-.cancel-btn {
-    background: #fee2e2;
-    color: #dc2626;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-.cancel-btn:hover {
-    background: #fecaca;
-}
+    /* Each booking item */
 
 
+    /* Hover effect (same feel as cards) */
+    #bookingsList div:hover {
+        background-color: #f9fafb;
+    }
+
+    /* Divider line */
+    #bookingsList hr {
+        border: none;
+        border-top: 1px solid #eee;
+        margin-top: 10px;
+    }
+
+
+
+    /* Empty text */
+    #bookingsList:empty::before {
+        content: "No bookings yet";
+        display: block;
+        text-align: center;
+        color: #6b7280;
+        padding: 20px;
+    }
+
+    * Top row */ .booking-top {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+
+    /* Sport name */
+    .booking-sport {
+        font-size: 16px;
+        color: #111827;
+    }
+
+    /* Status badge */
+    .booking-status {
+        background: #dcfce7;
+        color: #16a34a;
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+    }
+
+    /* Details */
+    .booking-details {
+        color: #4b5563;
+        line-height: 1.6;
+    }
+
+    /* Bottom actions */
+    .booking-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
+
+    .booking-content {
+        font-size: 14px;
+        color: #374151;
+        line-height: 1.6;
+    }
+
+    /* Cancel button */
+    .cancel-btn {
+        background: #fee2e2;
+        color: #dc2626;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .cancel-btn:hover {
+        background: #fecaca;
+    }
 </style>
 
 </html>
