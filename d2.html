@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elite Sports Complex Dashboard</title>
     <link rel="stylesheet" href="d2.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
@@ -57,20 +58,20 @@
                 <p>Your Coins</p>
                 <h2>100</h2>
             </div>
-            <div class="stat-box" style="cursor: pointer;" onclick="window.location.href='book.html'">
+            <div class="stat-box" style="cursor: pointer;" onclick="window.location.href='book.html#bookingsList'">
                 <div class="icon-wrap green-bg">📅</div>
                 <p>Your Bookings</p>
-                <h2>0</h2>
+                <h2 id="yourBookingCount">0</h2> <!-- Add an id for JS -->
             </div>
-            <div class="stat-box" style="cursor: pointer;" onclick="scrolltobootom()">
+            <div class="stat-box" style="cursor: pointer;" onclick="window.location.href='d2.html#sportsAvailable'">
                 <div class="icon-wrap purple-bg">👥</div>
                 <p>Total Courts</p>
-                <h2>15</h2>
+                <h2>6</h2>
             </div>
-            <div class="stat-box" style="cursor: pointer;" onclick="scrolltobootom()">
+            <div class="stat-box" style="cursor: pointer;" onclick="window.location.href='d2.html#sportsAvailable'">
                 <div class="icon-wrap orange-bg">🏀</div>
                 <p>Sports Available</p>
-                <h2>5</h2>
+                <h2>4</h2>
             </div>
         </div>
 
@@ -100,20 +101,28 @@
             </div>
             <div class="card-slots">
                 <div class="card-header">
-                    <strong>Available Slots Today</strong>
+                    <strong>Slots for Today</strong>
                     <span class="timer">⏱</span>
+
                 </div>
-                <p class="date-text">Sunday, March 1, 2026</p>
-                <div class="slots-list">
-                    <div class="slot"><span>6:00 AM - 8:00 AM</span> <span class="tag green">12 slots</span></div>
-                    <div class="slot"><span>8:00 AM - 10:00 AM</span> <span class="tag yellow">0 slots</span></div>
-                    <div class="slot"><span>10:00 AM - 12:00 PM</span> <span class="tag green">15 slots</span></div>
-                    <div class="slot"><span>12:00 PM - 2:00 PM</span> <span class="tag yellow">10 slots</span></div>
+                <div style="margin-bottom: 20px;">
+                    <label for="sport-select" style="font-weight:bold;">Select Sport:</label>
+                    <select id="sport-select" style="padding:8px 12px; border-radius:6px; border:1px solid #ccc;">
+                        <option value="">--Choose Sport--</option>
+                        <option value="Basketball">🏀 Basketball</option>
+                        <option value="Football">⚽ Football</option>
+                        <option value="Badminton">🏸 Badminton</option>
+                        <option value="Cricket">🏏 Cricket</option>
+                    </select>
+                </div>
+                <p class="date-text"></p>
+                <div class="slots-list" id="slotsList">
+
                 </div>
             </div>
         </div>
 
-        <div class="card-facility">
+        <div class="card-facility" id="sportsAvailable">
             <h3>Our Sports Facilities</h3>
             <div class="facility-grid">
                 <div class="facility-item">
@@ -121,21 +130,28 @@
                         <span class="type-blue">indoor</span>
                     </div>
                     <p class="count">2 courts</p>
-                    <p class="price">50 coins/hr</p>
+                    <p class="price">100 coins/hr</p>
                 </div>
                 <div class="facility-item">
-                    <div class="item-head"><strong>Tennis</strong> <br>
+                    <div class="item-head"><strong>Football</strong> <br>
                         <span class="type-green">outdoor</span>
                     </div>
-                    <p class="count">4 courts</p>
-                    <p class="price">40 coins/hr</p>
+                    <p class="count">1 courts</p>
+                    <p class="price">120 coins/hr</p>
                 </div>
                 <div class="facility-item">
                     <div class="item-head"><strong>Badminton</strong> <br>
                         <span class="type-blue">indoor</span>
                     </div>
-                    <p class="count">6 courts</p>
-                    <p class="price">30 coins/hr</p>
+                    <p class="count">2 courts</p>
+                    <p class="price">80 coins/hr</p>
+                </div>
+                <div class="facility-item">
+                    <div class="item-head"><strong>Cricket</strong> <br>
+                        <span class="type-blue">indoor</span>
+                    </div>
+                    <p class="count">1 courts</p>
+                    <p class="price">100 coins/hr</p>
                 </div>
             </div>
             <div class="summary-bar">
@@ -146,5 +162,118 @@
     </main>
 </body>
 <script src="All.js"></script>
+<script>
+
+    function slotHasPassed(time) {
+        const [start] = time.split("-").map(Number);
+        const nowHour = new Date().getHours();
+        return nowHour >= start;
+    }
+    const da = { "Basketball": 2, "Football": 1, "Badminton": 2, "Cricket": 1 };
+    const slotTimes = ["9-10", "10-11", "11-12", "12-13", "13-14", "14-15", "15-16"];
+
+    const slotDisplay = {
+        "9-10": "9:00 AM - 10:00 AM",
+        "10-11": "10:00 AM - 11:00 AM",
+        "11-12": "11:00 AM - 12:00 PM",
+        "12-13": "12:00 PM - 1:00 PM",
+        "13-14": "1:00 PM - 2:00 PM",
+        "14-15": "2:00 PM - 3:00 PM",
+        "15-16": "3:00 PM - 4:00 PM"
+    };
+    async function updateSlotsForSport(sport) {
+        if (!sport) return;
+
+        const slotsList = document.getElementById("slotsList");
+        slotsList.innerHTML = ""; // clear previous slots
+
+        try {
+            const res = await fetch("http://localhost:5000/all-bookings");
+            const data = await res.json();
+
+            const todayStr = new Date().toISOString().split("T")[0];
+            let anyAvailable = false;
+
+            slotTimes.forEach(time => {
+                if (slotHasPassed(time)) return; // skip past slots
+
+                anyAvailable = true; // found at least one future slot
+
+                const bookedSlots = data.bookings.filter(
+                    b => b.sport === sport && b.time === time && b.date === todayStr
+                ).length;
+
+                const available = da[sport] - bookedSlots;
+                const isFull = available <= 0;
+
+                const slotCard = document.createElement("div");
+                slotCard.style = `
+                display:flex; justify-content:space-between; align-items:center;
+                padding:10px 15px; border-radius:8px; margin:5px 0;
+                background:${isFull ? "#fee2e2" : "#d1fae5"};
+                border:1px solid ${isFull ? "#f87171" : "#34d399"};
+            `;
+                slotCard.innerHTML = `
+                <span>${slotDisplay[time]}</span>
+                <span style="font-weight:bold; color:${isFull ? "#b91c1c" : "#065f46"}">
+                    ${available > 0 ? available + " slots" : "Full"}
+                </span>
+            `;
+                slotsList.appendChild(slotCard);
+            });
+
+            // If no slots are available for the rest of the day
+            if (!anyAvailable) {
+                slotsList.innerHTML = "<p style='color:red; font-weight:bold;'>No more bookings available today</p>";
+            }
+
+            // Update date text
+            document.querySelector(".date-text").textContent = new Date().toLocaleDateString('en-US', {
+                weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+            });
+
+        } catch (err) {
+            console.error(err);
+            slotsList.innerHTML = "<p style='color:red;'>Failed to load slots.</p>";
+        }
+    }
+    document.getElementById("sport-select").addEventListener("change", function () {
+        updateSlotsForSport(this.value);
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const firstSport = document.getElementById("sport-select").options[1].value; // Basketball
+        document.getElementById("sport-select").value = firstSport;
+        updateSlotsForSport(firstSport);
+    });
+
+    async function updateYourBookingsCount() {
+        try {
+            const res = await fetch("http://localhost:5000/all-bookings");
+            const data = await res.json();
+
+            const now = new Date();
+            const futureBookings = data.bookings.filter(b => {
+                const [startHour, endHour] = b.time.split("-").map(Number);
+
+                // Convert afternoon slots to 24h (assuming 12-4 PM)
+                let bookingHour = startHour;
+                if (startHour === 12) bookingHour = 12;
+                else if (startHour >= 1 && startHour <= 4) bookingHour += 12;
+
+                const bookingDate = new Date(b.date + "T00:00"); // booking day
+                return bookingDate > now || (bookingDate.toDateString() === now.toDateString() && bookingHour > now.getHours());
+            });
+
+            document.getElementById("yourBookingCount").textContent = futureBookings.length;
+        } catch (err) {
+            console.error("Failed to fetch bookings:", err);
+            document.getElementById("yourBookingCount").textContent = "0";
+        }
+    }
+
+    // Run on page load
+    updateYourBookingsCount();
+</script>
 
 </html>
