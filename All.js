@@ -244,39 +244,126 @@ document.getElementById('back-btn-4').onclick = () => showStep(2);
 
 showStep(0);
 
-// // Confirmation popover on booking
-// document.getElementById('confirm-booking-btn').onclick = function () {
-//     let pop = document.createElement('div');
-//     pop.id = 'booking-popover';
-//     pop.innerHTML = `
-//             <div style="
-//                 position: fixed;
-//                 top: 30%;
-//                 left: 50%;
-//                 transform: translate(-50%, -50%);
-//                 background: #f0fdf4;
-//                 border: 2px solid #10b981;
-//                 border-radius: 16px;
-//                 padding: 36px 48px;
-//                 box-shadow: 0 8px 32px rgba(16,185,129,0.15);
-//                 z-index: 9999;
-//                 text-align: center;
-//             ">
-//                 <div style="font-size: 2.5em; color: #10b981; margin-bottom: 12px;">
-//                     <i class="fas fa-check-circle"></i>
-//                 </div>
-//                 <div style="font-size: 1.3em; color: #222; font-weight: bold; margin-bottom: 8px;">
-//                     Booking Confirmed!
-//                 </div>
-//                 <div style="color: #444; font-size: 1em;">
-//                     Thank you for your booking.<br>Your slot has been reserved.
-//                 </div>
-//             </div>
-//         `;
-//     document.body.appendChild(pop);
+function showBookingPopover(message = "Booking Confirmed!") {
+    let pop = document.createElement('div');
+    pop.id = 'booking-popover';
 
-//     setTimeout(() => {
-//         document.body.removeChild(pop);
-//         showStep(0);
-//     }, 1000);
-// };
+    pop.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            border-radius: 16px;
+            padding: 30px 40px;
+            box-shadow: 0 8px 32px rgba(16,185,129,0.2);
+            z-index: 9999;
+            text-align: center;
+            animation: fadeIn 0.3s ease;
+        ">
+            <div style="font-size: 2.5em; color: #10b981; margin-bottom: 10px;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 6px;">
+                ${message}
+            </div>
+            <div style="color: #444;">
+                Your slot has been reserved successfully.
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(pop);
+
+    setTimeout(() => {
+        pop.remove();
+        window.location.href = "book.html";
+    }, 2000);
+}
+const courts = {
+    "Basketball": 2,
+    "Badminton": 2,
+    "Cricket": 1,
+    "Football": 1
+};
+async function updateAvailableSlots() {
+    const sport = getSelectedSport();
+    const date = document.getElementById("date-input").value;
+
+    if (!sport || !date) return;
+
+    const totalCourts = courts[sport];
+
+    const res = await fetch("http://localhost:5000/all-bookings");
+    const data = await res.json();
+
+    const slotCounts = {};
+    data.bookings.forEach(b => {
+        if (b.sport === sport && b.date === date) {
+            slotCounts[b.time] = (slotCounts[b.time] || 0) + 1;
+        }
+    });
+
+    const slotMap = {
+        "9-10": "9:00 AM - 10:00 AM",
+        "10-11": "10:00 AM - 11:00 AM",
+        "11-12": "11:00 AM - 12:00 PM",
+        "12-13": "12:00 PM - 1:00 PM",
+        "13-14": "1:00 PM - 2:00 PM",
+        "14-15": "2:00 PM - 3:00 PM",
+        "15-16": "3:00 PM - 4:00 PM",
+        "16-17": "4:00 PM - 5:00 PM"
+    };
+
+    const today = new Date().toISOString().split("T")[0];
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    const select = document.getElementById("time-slot");
+    select.innerHTML = `<option value="">--Select Time Slot--</option>`;
+
+    let availableCount = 0;
+
+    Object.keys(slotMap).forEach(slot => {
+        const [startHour, endHour] = slot.split("-").map(Number);
+
+        const slotStartMinutes = startHour * 60;
+        const booked = slotCounts[slot] || 0;
+
+        const isPast = (date === today && slotStartMinutes <= currentMinutes);
+        const isFull = (booked >= totalCourts);
+
+        if (!isPast && !isFull) {
+            const option = document.createElement("option");
+            option.value = slot;
+            option.textContent = slotMap[slot];
+
+            select.appendChild(option);
+            availableCount++;
+        }
+    });
+
+    if (availableCount === 0) {
+        const option = document.createElement("option");
+        option.textContent = "No slots available";
+        option.disabled = true;
+        select.appendChild(option);
+    }
+}
+document.getElementById("date-input").addEventListener("change", updateAvailableSlots);
+
+document.querySelectorAll('.sport-card').forEach(card => {
+    card.addEventListener('click', updateAvailableSlots);
+});
+const today = new Date().toISOString().split("T")[0];
+document.getElementById("date-input").value = today;
+document.getElementById("date-input").setAttribute("min", today);
+document.getElementById("date-input").addEventListener("input", function () {
+    const today = new Date().toISOString().split("T")[0];
+
+    if (this.value < today) {
+        this.value = today;
+    }
+});
