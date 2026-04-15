@@ -269,6 +269,7 @@
             <p>Reserve your arena</p>
             <button onclick="showSection('login')">Login</button>
             <button onclick="showSection('signup')">Sign Up</button>
+            <button onclick="showSection('admin-login')">Admin Login</button>
         </div>
 
         <div id="login-section" style="display: none;">
@@ -327,6 +328,25 @@
 
             <button onclick="registerUser()">Create Account</button>
         </div>
+        <!-- Admin -->
+        <div id="admin-login-section" style="display: none;">
+            <span class="back-arrow" onclick="showSection('menu')">← Back</span>
+            <h2>Admin Login</h2>
+
+            <div class="input-group">
+                <input type="email" id="adminEmail" placeholder="Admin Email" required>
+            </div>
+
+            <div class="input-group" style="position: relative;">
+                <input type="password" id="adminPassword" placeholder="Password" required>
+                <i id="toggleAdminPassword" class="fa fa-eye" style="
+            position:absolute; right:12px; top:45%; transform:translateY(-50%);
+            cursor:pointer; color:#555;">
+                </i>
+            </div>
+
+            <button onclick="adminLogin()">Login</button>
+        </div>
 
         <div style="margin-top: 15px; text-align: center;">
             <p style="font-size:13px; color:#666;">or</p>
@@ -356,14 +376,15 @@
 </body>
 <script>
     document.getElementById("googleLoginBtn").addEventListener("click", () => {
-    window.location.href = "http://localhost:5000/auth/google";
-});
+        window.location.href = "http://localhost:5000/auth/google";
+    });
     document.getElementById("loginBtn").addEventListener("click", loginUser);
 
     function showSection(sectionId) {
         document.getElementById('menu-section').style.display = 'none';
         document.getElementById('login-section').style.display = 'none';
         document.getElementById('signup-section').style.display = 'none';
+        document.getElementById('admin-login-section').style.display = 'none'; // ✅ ADD
 
         if (sectionId === 'menu') {
             document.getElementById('menu-section').style.display = 'block';
@@ -371,7 +392,6 @@
             document.getElementById(sectionId + '-section').style.display = 'block';
         }
     }
-
     async function registerUser() {
         const name = document.getElementById("name").value;
         const email = document.getElementById("email").value;
@@ -473,6 +493,16 @@
     }
 
     // eye button
+    const toggleAdminPassword = document.getElementById("toggleAdminPassword");
+    const adminPasswordInput = document.getElementById("adminPassword");
+
+    toggleAdminPassword.addEventListener("click", () => {
+        const type = adminPasswordInput.type === "password" ? "text" : "password";
+        adminPasswordInput.type = type;
+
+        toggleAdminPassword.classList.toggle("fa-eye");
+        toggleAdminPassword.classList.toggle("fa-eye-slash");
+    });
     const togglePassword = document.getElementById("togglePassword");
     const passwordInput = document.getElementById("loginPassword");
 
@@ -585,231 +615,44 @@
             document.getElementById("otpMsg").style.color = "red";
         }
     });
-</script>
 
-</html>        }
+    async function adminLogin() {
+        const email = document.getElementById("adminEmail").value;
+        const password = document.getElementById("adminPassword").value;
 
-        .back-arrow {
-            display: block;
-            text-align: left;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 10px;
-            opacity: 0.8;
-            transition: 0.3s;
+        if (!email || !password) {
+            showToast("Fill all fields", "error");
+            return;
         }
 
-        .back-arrow:hover {
-            opacity: 1;
-            transform: translateX(-3px);
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid #dddddddc;
-            border-radius: 8px;
-            font-size: 14px;
-            box-sizing: border-box;
-            ;
-        }
-
-        input:focus {
-            outline: 2px solid #007bff;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            background: #0056b3;
-            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.4);
-}
-
-        #menu-section button {
-            background: #0056b3;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            margin-bottom: 10px;
-        }
-
-        #menu-section button:hover {
-            background: white;
-            color: #0056b3;
-            border: 1px solid #0056b3;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-
-        <div id="menu-section">
-            <h1>Elite Sports Booking System</h1>
-            <p>Reserve your arena</p>
-            <button onclick="showSection('login')">Login</button>
-            <button onclick="showSection('signup')">Sign Up</button>
-        </div>
-
-        <div id="login-section" style="display: none;">
-            <span class="back-arrow" onclick="showSection('menu')">← Back</span>
-            <h2>Login</h2>
-            <input type="email" id="loginEmail" placeholder="Email" required>
-            <input type="password" id="loginPassword" placeholder="Password" required>
-            <button id="loginBtn">Submit</button>
-        </div>
-
-        <div id="signup-section" style="display: none;">
-            <span class="back-arrow" onclick="showSection('menu')">← Back</span>
-            <h2>Sign Up</h2>
-            <input type="text" id="name" placeholder="Name" required>
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button onclick="registerUser()">Create Account</button>
-        </div>
-
-    </div>
-
-    <!-- <script>
-        function showSection(sectionId) {
-            document.getElementById('menu-section').style.display = 'none';
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('signup-section').style.display = 'none';
-
-            if (sectionId === 'menu') {
-                document.getElementById('menu-section').style.display = 'block';
-            } else {
-                document.getElementById(sectionId + '-section').style.display = 'block';
-            }
-        }
-
-        function validateEmail(email) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        }
-
-        document.querySelectorAll('button').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const text = this.innerText.toLowerCase();
-
-                if (text === 'submit' || text === 'create account') {
-                    const parentDiv = this.parentElement;
-                    const inputs = parentDiv.querySelectorAll('input');
-                    let allFilled = true;
-                    let emailValid = true;
-
-                    inputs.forEach(input => {
-                        if (input.value.trim() === "") allFilled = false;
-                        if (input.type === "email" && !validateEmail(input.value.trim())) emailValid = false;
-                    });
-
-                    if (!allFilled) {
-                        alert("Please fill out all fields.");
-                    } else if (!emailValid) {
-                        alert("Please enter a valid email address.");
-                    } else {
-                        window.location.href = "d2.html";
-                    }
-                }
+        try {
+            const res = await fetch("http://localhost:5000/admin/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email, password })
             });
-        });
-    </script> -->
-    <script>
-        document.getElementById("loginBtn").addEventListener("click", loginUser);
 
-        function showSection(sectionId) {
-            document.getElementById('menu-section').style.display = 'none';
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('signup-section').style.display = 'none';
+            const data = await res.json();
 
-            if (sectionId === 'menu') {
-                document.getElementById('menu-section').style.display = 'block';
+            if (data.success) {
+                localStorage.setItem("adminEmail", email);
+                showToast("Admin login successful", "success");
+
+                setTimeout(() => {
+                    window.location.href = "admin-dashboard.html";
+                }, 1000);
+
             } else {
-                document.getElementById(sectionId + '-section').style.display = 'block';
+                showToast(data.message, "error");
+                document.getElementById("adminPassword").value = "";
             }
+
+        } catch (err) {
+            showToast("Server error", "error");
         }
-
-    async function registerUser() {
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-        if (!name || !email || !password) {
-        alert("Fill all fields");
-        return;
     }
-
-    const res = await fetch("http://localhost:5000/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ name, email, password })
-    });
-
-    const data = await res.json();
-    alert(data.message);
-
-    if (data.success) {
-        showSection('login'); // switch to login section
-    }
-}
-
-// LOGIN FUNCTION (we’ll connect backend next)
-async function loginUser() {
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
-
-    if (!email || !password) {
-        alert("Fill all fields");
-        return;
-    }
-
-    try {
-        const res = await fetch("http://localhost:5000/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-
-        if (data.success && data.user) {
-            // ✅ FORCE SAVE
-            localStorage.setItem("userEmail", data.user.email);
-            localStorage.setItem("userName", data.user.name); // ✅ NEW
-
-            console.log("Saved:", localStorage.getItem("userEmail"));
-
-            // ✅ Delay ensures storage persists
-            setTimeout(() => {
-                window.location.href = "d2.html";
-            }, 500);
-
-        } else {
-            alert(data.message);
-        }
-
-    } catch (err) {
-        console.error("Login error:", err);
-        alert("Something went wrong");
-    }
-}
-
-
 </script>
-</body>
 
 </html>

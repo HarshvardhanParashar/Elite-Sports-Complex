@@ -53,7 +53,7 @@
         <div class="coins"
             style="background-color:#EFF6FF; border: 1px solid #DBEAFE; border-radius: 8px; padding: 12px 20px; display: inline-flex; align-items: center; color: #3B82F6; font-weight: 500;">
             <span style="font-size: medium; font-weight: bold;"> 💰 Available Coins: </span>
-            <div class="coin-amount" style="margin-left: auto; font-weight: bold;">100</div>
+            <div class="coin-amount" style="margin-left: auto; font-weight: bold;" id="coinCount">100</div>
         </div>
         <br><br>
         <div class="form-header"
@@ -99,7 +99,8 @@
                             <span>Courts:</span><span style="color:#2563eb; font-weight:bold">2</span>
                         </div>
 
-                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px">
+                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px;"
+                            class="cost">
                             <span>Rate:</span><span style="color:#2563eb; font-weight:bold">100 coins/hr</span>
                         </div>
                     </div>
@@ -110,7 +111,8 @@
                         <div style="display:flex; justify-content:space-between; font-size:13px">
                             <span>Courts:</span><span style="color:#2563eb; font-weight:bold">1</span>
                         </div>
-                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px;">
+                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px;"
+                            class="cost">
                             <span>Rate:</span><span style="color:#2563eb; font-weight:bold;">120 coins/hr</span>
                         </div>
                     </div>
@@ -121,7 +123,8 @@
                         <div style="display:flex; justify-content:space-between; font-size:13px">
                             <span>Courts:</span><span style="color:#2563eb; font-weight:bold">1</span>
                         </div>
-                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px;">
+                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px;"
+                            class="cost">
                             <span>Rate:</span><span style="color:#2563eb; font-weight:bold;">100 coins/hr</span>
                         </div>
                     </div>
@@ -132,7 +135,8 @@
                         <div style="display:flex; justify-content:space-between; font-size:13px">
                             <span>Courts:</span><span style="color:#2563eb; font-weight:bold">2</span>
                         </div>
-                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px;">
+                        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top: 6px;"
+                            class="cost">
                             <span>Rate:</span><span style="color:#2563eb; font-weight:bold;">80 coins/hr</span>
                         </div>
                     </div>
@@ -227,7 +231,18 @@
 <script src=" All.js"></script>
 <script>
     let selectedSport = "";
+    async function loadCoins() {
+        const email = localStorage.getItem("userEmail");
 
+        const res = await fetch(`http://localhost:5000/user-coins/${email}`);
+        const data = await res.json();
+
+        if (data.success) {
+            document.getElementById("coinCount").textContent = data.coins;
+        }
+    }
+    loadCoins();
+    window.addEventListener("load", loadCoins);
     // Select sport
     document.querySelectorAll('.sport-card').forEach(card => {
         card.addEventListener('click', function () {
@@ -237,32 +252,26 @@
             selectedSport = this.getAttribute('data-sport');
         });
     });
-
-    //Booking Function
     async function confirmBooking() {
+        const selectedSport = getSelectedSport();
         const date = document.getElementById("date-input").value;
         const time = document.getElementById("time-slot").value;
         const players = document.getElementById("player-count").value;
-
         const email = localStorage.getItem("userEmail");
 
         if (!selectedSport || !date || !time || !players) {
             alert("Fill all details");
             return;
         }
-        const playersData = [];
 
+        const playersData = [];
         const count = parseInt(players);
 
         for (let i = 1; i <= count; i++) {
-            const name = document.querySelector(`[name="player${i}_name"]`)?.value;
-            const mobile = document.querySelector(`[name="player${i}_mobile"]`)?.value;
-            const emailP = document.querySelector(`[name="player${i}_email"]`)?.value;
-
             playersData.push({
-                name,
-                mobile,
-                email: emailP
+                name: document.querySelector(`[name="player${i}_name"]`)?.value,
+                mobile: document.querySelector(`[name="player${i}_mobile"]`)?.value,
+                email: document.querySelector(`[name="player${i}_email"]`)?.value
             });
         }
 
@@ -276,20 +285,17 @@
                 sport: selectedSport,
                 date,
                 time,
-                players,
+                players: count,
                 playersData
             })
         });
 
         const data = await res.json();
         showBookingPopover(data.message);
+
         if (data.success) {
             loadBookings();
         }
-
-    }
-    function rescheduleBooking(id) {
-        alert("Reschedule feature coming soon 😄");
     }
 
     async function loadBookings() {
@@ -352,12 +358,12 @@
 
                     <div>
                         <span class="label">Players</span>
-                        <div>${b.players}</div>
+                        <div>${b.players ?? 0}</div>
                     </div>
 
                     <div>
                         <span class="label">Cost</span>
-                        <div class="cost">100 coins</div>
+                        <div class="cost">${b.cost} coins</div>
                     </div>
                 </div>
             `;
