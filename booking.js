@@ -12,7 +12,9 @@ const bookingSchema = new mongoose.Schema({
             mobile: String,
             email: String
         }
-    ]
+    ],
+    cost: Number
 });
+
 
 module.exports = mongoose.model('Booking', bookingSchema);
