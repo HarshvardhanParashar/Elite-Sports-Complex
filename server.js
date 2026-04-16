@@ -16,9 +16,10 @@ app.use(express.json());
 
 const dns = require('dns');
 dns.setDefaultResultOrder('ipv4first');
-
+require("dotenv").config();
 // Connect MongoDB
-mongoose.connect('mongodb://08harshiiii_db_user:Harshita0807@ac-xnxqzh2-shard-00-00.kkop3e2.mongodb.net:27017,ac-xnxqzh2-shard-00-01.kkop3e2.mongodb.net:27017,ac-xnxqzh2-shard-00-02.kkop3e2.mongodb.net:27017/?ssl=true&replicaSet=atlas-12qk7v-shard-0&authSource=admin&appName=Elite-Sports-Complex')
+// mongoose.connect('mongodb://08harshiiii_db_user:Harshita0807@ac-xnxqzh2-shard-00-00.kkop3e2.mongodb.net:27017,ac-xnxqzh2-shard-00-01.kkop3e2.mongodb.net:27017,ac-xnxqzh2-shard-00-02.kkop3e2.mongodb.net:27017/?ssl=true&replicaSet=atlas-12qk7v-shard-0&authSource=admin&appName=Elite-Sports-Complex')
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("MongoDB Connected"))
     .catch(err => console.log(err));
 
@@ -34,10 +35,19 @@ app.listen(5000, () => {
 
 app.post('/register', async (req, res) => {
     try {
+        console.log("BODY:", req.body); // 🔍 Debug
+
         const { name, email, password } = req.body;
 
-        // 🔍 Check if user already exists
+        if (!name || !email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: "All fields required"
+            });
+        }
+
         const existingUser = await User.findOne({ email });
+        console.log("Existing user:", existingUser);
 
         if (existingUser) {
             return res.json({
@@ -46,7 +56,6 @@ app.post('/register', async (req, res) => {
             });
         }
 
-        // ✅ Create new user
         const newUser = new User({ name, email, password });
         await newUser.save();
 
@@ -56,7 +65,7 @@ app.post('/register', async (req, res) => {
         });
 
     } catch (err) {
-        console.log(err);
+        console.log("REGISTER ERROR:", err); // 🔥 CRITICAL
         res.status(500).json({
             success: false,
             message: "Error saving user"
@@ -105,29 +114,55 @@ app.post("/login", async (req, res) => {
 });
 app.post('/book', async (req, res) => {
     try {
-        const { email, sport, date, time, players } = req.body;
+        const { email, sport, time, date, players, playersData } = req.body;
 
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
+        // 🎯 Define prices
+        const prices = {
+            Basketball: 100,
+            Football: 120,
+            Badminton: 80,
+            Cricket: 100
+        };
+
+        const cost = prices[sport];
+
+        if (user.coins < cost) {
+            return res.json({
+                success: false,
+                message: " Insufficient coins"
+            });
+        }
+
+        user.coins -= cost;
+        await user.save();
+
+        //  Save booking
         const newBooking = new Booking({
             email,
             sport,
-            date,
             time,
-            players
+            date,
+            players: Number(players),
+            playersData,
+            cost: cost
         });
-
         await newBooking.save();
 
         res.json({
             success: true,
-            message: "Booking Confirmed ✅"
+            message: "Booking successful ",
+            coins: user.coins
         });
 
     } catch (err) {
-        console.log(err);
-        res.json({
-            success: false,
-            message: "Booking failed ❌"
-        });
+        console.error(err);
+        res.status(500).json({ success: false, message: "Booking failed" });
     }
 });
 app.get('/my-bookings/:email', async (req, res) => {
@@ -148,23 +183,7 @@ app.get('/my-bookings/:email', async (req, res) => {
         });
     }
 });
-app.delete('/cancel-booking/:id', async (req, res) => {
-    try {
-        await Booking.findByIdAndDelete(req.params.id);
 
-        res.json({
-            success: true,
-            message: "Booking cancelled successfully ❌"
-        });
-
-    } catch (err) {
-        console.log(err);
-        res.json({
-            success: false,
-            message: "Error cancelling booking"
-        });
-    }
-});
 app.get("/all-bookings", async (req, res) => {
     try {
         const bookings = await Booking.find();
@@ -187,20 +206,26 @@ const transporter = nodemailer.createTransport({
     }
 });
 app.post("/send-otp", async (req, res) => {
-    const { email } = req.body;
+    try {
+        const { email } = req.body;
 
-    const otp = Math.floor(100000 + Math.random() * 900000);
+        if (!email) return res.status(400).json({ success: false, message: "Email required" });
 
-    otpStore[email] = otp;
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        otpStore[email] = otp;
 
-    await transporter.sendMail({
-        from: "your_email@gmail.com",
-        to: email,
-        subject: "Your OTP Code",
-        text: `Your OTP is ${otp}`
-    });
+        await transporter.sendMail({
+            from: "hvpparashar0907@gmail.com",
+            to: email,
+            subject: "Your OTP Code",
+            text: `Your OTP is ${otp}`
+        });
 
-    res.json({ success: true, message: "OTP sent to email" });
+        res.json({ success: true, message: "OTP sent to email" });
+    } catch (err) {
+        console.error("Send OTP Error:", err);
+        res.status(500).json({ success: false, message: "Failed to send OTP" });
+    }
 });
 app.post("/verify-otp", (req, res) => {
     const { email, otp } = req.body;
@@ -221,40 +246,42 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+
 passport.use(new GoogleStrategy({
     clientID: "937316126083-44527gjcq404aj9jrugotrlfo8t042lc.apps.googleusercontent.com",
     clientSecret: "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",
-    callbackURL: "http://localhost:5500/auth/google/callback"
+    callbackURL: "http://localhost:5000/auth/google/callback"
 },
     async (accessToken, refreshToken, profile, done) => {
         try {
+            console.log("Google Profile Received:", profile.emails[0].value);
             const email = profile.emails[0].value;
 
             let user = await User.findOne({ email });
 
             if (user) {
-                // ✅ User already exists
-                // 👉 If signed up normally → attach Google ID
+                console.log("User exists, logging in...");
                 if (!user.googleId) {
                     user.googleId = profile.id;
                     await user.save();
                 }
-
                 return done(null, user);
             }
 
-            // 🆕 New user (Google signup)
+            console.log("Creating new Google user...");
             user = new User({
                 name: profile.displayName,
                 email: email,
                 googleId: profile.id
+                // Do NOT include password here
             });
 
-            await user.save();
-
-            return done(null, user);
+            const savedUser = await user.save();
+            console.log("User successfully saved to DB:", savedUser);
+            return done(null, savedUser);
 
         } catch (err) {
+            console.error("Error during Google Save:", err); // This will tell you WHY it's not saving
             return done(err, null);
         }
     }));
@@ -270,6 +297,132 @@ app.get("/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/" }),
     (req, res) => {
         // redirect to your frontend after login
-        res.redirect(`http://127.0.0.1:5502/Project/login.html?email=${req.user.email}&name=${req.user.name}`);
+        res.redirect(`http://127.0.0.1:5502/Project/d2.html?email=${req.user.email}&name=${req.user.name}`);
     }
 );
+app.get("/user-coins/:email", async (req, res) => {
+    const user = await User.findOne({ email: req.params.email });
+
+    if (!user) {
+        return res.json({ success: false });
+    }
+
+    res.json({
+        success: true,
+        coins: user.coins
+    });
+});
+
+//admin
+const verifyAdmin = async (req, res, next) => {
+    const { email } = req.body; // simple approach
+
+    const user = await User.findOne({ email });
+
+    if (!user || user.role !== "admin") {
+        return res.status(403).json({
+            success: false,
+            message: "Access denied (Admin only)"
+        });
+    }
+
+    next();
+};
+// ✅ Update coins (Admin only)
+app.post("/admin/update-coins", verifyAdmin, async (req, res) => {
+    try {
+        const { targetEmail, coins, action } = req.body;
+
+        const user = await User.findOne({ email: targetEmail });
+
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
+        // 🎯 3 types of update
+        if (action === "add") {
+            user.coins += coins;
+        } else if (action === "deduct") {
+            user.coins -= coins;
+        } else {
+            user.coins = coins; // set directly
+        }
+
+        await user.save();
+
+        res.json({
+            success: true,
+            message: "Coins updated successfully",
+            updatedCoins: user.coins
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: "Error updating coins" });
+    }
+});
+app.get("/admin/users", async (req, res) => {
+    const users = await User.find().select("-password");
+
+    res.json({
+        success: true,
+        users
+    });
+});
+app.post("/admin/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user || user.role !== "admin") {
+        return res.json({
+            success: false,
+            message: "Not an admin"
+        });
+    }
+
+    if (user.password !== password) {
+        return res.json({
+            success: false,
+            message: "Wrong password"
+        });
+    }
+
+    res.json({
+        success: true,
+        message: "Admin login successful",
+        email: user.email
+    });
+});
+app.get("/admin/stats", async (req, res) => {
+    try {
+        const totalUsers = await User.countDocuments();
+        const totalBookings = await Booking.countDocuments();
+
+        // Calculate revenue
+        const bookings = await Booking.find();
+
+        const prices = {
+            Basketball: 100,
+            Football: 120,
+            Badminton: 80,
+            Cricket: 100
+        };
+
+        let revenue = 0;
+
+        bookings.forEach(b => {
+            revenue += prices[b.sport] || 0;
+        });
+
+        res.json({
+            success: true,
+            totalUsers,
+            totalBookings,
+            revenue
+        });
+
+    } catch (err) {
+        res.status(500).json({ success: false });
+    }
+});
