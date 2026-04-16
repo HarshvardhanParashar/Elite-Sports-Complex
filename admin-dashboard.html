@@ -172,7 +172,7 @@
         }
 
         // 🔥 Load Stats
-        fetch("http://localhost:5000/admin/stats")
+        fetch("https://elite-sports-complex.onrender.com/admin/stats")
             .then(res => res.json())
             .then(data => {
                 document.getElementById("totalUsers").innerText = data.totalUsers;
@@ -181,7 +181,7 @@
             });
 
         // Load users
-        fetch("http://localhost:5000/admin/users")
+        fetch("https://elite-sports-complex.onrender.com/admin/users")
             .then(res => res.json())
             .then(data => {
                 const table = document.getElementById("usersTable");
@@ -206,7 +206,7 @@
         function updateCoins(userEmail) {
             const coins = document.getElementById(`coins-${userEmail}`).value;
 
-            fetch("http://localhost:5000/admin/update-coins", {
+            fetch("https://elite-sports-complex.onrender.com/admin/update-coins", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
