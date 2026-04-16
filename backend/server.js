@@ -302,7 +302,7 @@ app.get("/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/" }),
     (req, res) => {
         // redirect to your frontend after login
-        res.redirect(`http://127.0.0.1:5502/Project/d2.html?email=${req.user.email}&name=${req.user.name}`);
+        res.redirect(`https://elite-sports-complex.onrender.com/frontend/d2.html?email=${req.user.email}&name=${req.user.name}`);
     }
 );
 app.get("/user-coins/:email", async (req, res) => {
