@@ -234,7 +234,7 @@
     async function loadCoins() {
         const email = localStorage.getItem("userEmail");
 
-        const res = await fetch(`http://localhost:5000/user-coins/${email}`);
+        const res = await fetch(`https://elite-sports-complex.onrender.com/user-coins/${email}`);
         const data = await res.json();
 
         if (data.success) {
@@ -275,7 +275,7 @@
             });
         }
 
-        const res = await fetch("http://localhost:5000/book", {
+        const res = await fetch("https://elite-sports-complex.onrender.com/book", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -303,7 +303,7 @@
         const container = document.getElementById("bookingsList");
 
         try {
-            const res = await fetch(`http://localhost:5000/my-bookings/${email}`);
+            const res = await fetch(`https://elite-sports-complex.onrender.com/my-bookings/${email}`);
             const data = await res.json();
 
             container.innerHTML = "";
