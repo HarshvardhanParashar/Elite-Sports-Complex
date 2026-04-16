@@ -296,7 +296,7 @@ async function updateAvailableSlots() {
 
     const totalCourts = courts[sport];
 
-    const res = await fetch("http://localhost:5000/all-bookings");
+    const res = await fetch("https://elite-sports-complex.onrender.com/all-bookings");
     const data = await res.json();
 
     const slotCounts = {};
