@@ -131,7 +131,7 @@
     async function loadCoins() {
         const email = localStorage.getItem("userEmail");
 
-        const res = await fetch(`http://localhost:5000/user-coins/${email}`);
+        const res = await fetch(`https://elite-sports-complex.onrender.com/user-coins/${email}`);
         const data = await res.json();
 
         if (data.success) {
