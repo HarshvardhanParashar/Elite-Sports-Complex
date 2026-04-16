@@ -376,7 +376,7 @@
 </body>
 <script>
     document.getElementById("googleLoginBtn").addEventListener("click", () => {
-        window.location.href = "http://localhost:5000/auth/google";
+        window.location.href = "https://elite-sports-complex.onrender.com/auth/google";
     });
     document.getElementById("loginBtn").addEventListener("click", loginUser);
 
@@ -413,7 +413,7 @@
             return;
         }
 
-        const res = await fetch("http://localhost:5000/register", {
+        const res = await fetch("https://elite-sports-complex.onrender.com/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -439,7 +439,7 @@
         }
 
         try {
-            const res = await fetch("http://localhost:5000/login", {
+            const res = await fetch("https://elite-sports-complex.onrender.com/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -582,7 +582,7 @@
             return;
         }
 
-        const res = await fetch("http://localhost:5000/send-otp", {
+        const res = await fetch("https://elite-sports-complex.onrender.com/send-otp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email })
@@ -597,7 +597,7 @@
         const email = document.getElementById("email").value;
         const otp = document.getElementById("otp").value;
 
-        const res = await fetch("http://localhost:5000/verify-otp", {
+        const res = await fetch("https://elite-sports-complex.onrender.com/verify-otp", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, otp })
@@ -626,7 +626,7 @@
         }
 
         try {
-            const res = await fetch("http://localhost:5000/admin/login", {
+            const res = await fetch("https://elite-sports-complex.onrender.com/admin/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
