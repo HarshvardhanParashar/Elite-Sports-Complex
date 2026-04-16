@@ -255,7 +255,7 @@ app.use(passport.session());
 passport.use(new GoogleStrategy({
     clientID: "937316126083-44527gjcq404aj9jrugotrlfo8t042lc.apps.googleusercontent.com",
     clientSecret: "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",
-    callbackURL: "http://localhost:5000/auth/google/callback"
+    callbackURL: "https://elite-sports-complex.onrender.com/auth/google/callback"
 },
     async (accessToken, refreshToken, profile, done) => {
         try {
