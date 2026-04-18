@@ -109,11 +109,12 @@
     display: flex;
     gap: 15px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .stat-box {
     background: white;
-    flex: 1;
+    flex: 1 1 200px;
     padding: 15px;
     border-radius: 12px;
     border: 1px solid #eee;
