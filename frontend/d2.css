@@ -1,3 +1,8 @@
+.main-content {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+    padding: 20px;
+}
 .sidebar {
     width: 200px;
     height: 100vh;
@@ -178,7 +183,10 @@
     gap: 10px;
     margin-top: 10px;
 }
-
+#weather-card {
+    width: 100%;
+    max-width: 380px;
+}
 .slot {
     background: #f9f9f9;
     padding: 10px;
@@ -240,4 +248,62 @@
     border-radius: 10px;
     font-size: 12px;
     margin-top: 20px;
+}
+/* 📱 MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+
+    /* Sidebar becomes top bar */
+    .sidebar {
+        position: fixed;
+        width: 100%;
+        height: auto;
+        bottom: 0;
+        top: auto;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px;
+        z-index: 1000;
+    }
+
+    .brand {
+        display: none;
+    }
+
+    .side-nav {
+        flex-direction: row !important;
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    .nav-link {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    /* Main content full width */
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding-bottom: 80px; /* space for bottom nav */
+    }
+
+    /* Stats stack */
+    .grid-stats {
+        flex-direction: column;
+    }
+
+    /* Middle section stack */
+    .grid-middle {
+        grid-template-columns: 1fr;
+    }
+
+    /* Slots grid */
+    .slots-list {
+        grid-template-columns: 1fr;
+    }
+
+    /* Facilities */
+    .facility-grid {
+        grid-template-columns: 1fr;
+    }
 }
