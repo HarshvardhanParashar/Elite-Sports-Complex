@@ -7,21 +7,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Login</title>
     <style>
-        .toast {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-10px);
-            background: #333;
-            color: #fff;
-            padding: 10px 16px;
-            border-radius: 6px;
-            font-size: 13px;
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 10;
-            width: 90%;
-            text-align: center;
+       .toast {
+        position: fixed;
+        top: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 6px;
+        font-size: 13px;
+        opacity: 0;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        width: 90%;
+        max-width: 350px;
+        text-align: center;
         }
 
         /* Show animation */
@@ -40,18 +41,21 @@
 
         body {
             background-color: #e6e6f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 360px;
-            margin: 80px auto;
-            padding: 40px 30px;
+            width: 90%;
+            max-width: 380px;
+            margin: 60px auto;
+            padding: 30px 20px;
             background: #fff;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1),
-                0 4px 8px rgba(0, 0, 0, 0.08);
-            font-family: 'Segoe UI', sans-serif;
-            text-align: left;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1),
+                        0 4px 8px rgba(0,0,0,0.08);
         }
 
         .input-group {
@@ -152,7 +156,7 @@
             background: rgba(255, 255, 255, 0.9);
             border: 1px solid #dddddddc;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 16px;
             box-sizing: border-box;
             ;
         }
@@ -189,32 +193,19 @@
             border: 1px solid #0056b3;
         }
 
-        /* .otp-btn {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 6px 10px;
-            font-size: 12px;
-            background: #1a73e8;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        } */
-
         /* OTP layout fix */
         .otp-group {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             align-items: center;
-            /* 🔥 vertical alignment fix */
-            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
+
 
         .otp-group input {
             flex: 1;
             padding: 12px;
+            min-width: 60%;
             border-radius: 8px;
             border: 1px solid #ddd;
             font-size: 14px;
@@ -223,7 +214,7 @@
         /* Button next to input */
         .otp-group button {
             width: auto !important;
-            /* 🔥 override global button */
+            flex-shrink: 0;
             padding: 10px 14px;
             font-size: 13px;
             background: #1a73e8;
@@ -257,6 +248,40 @@
             font-size: 13px;
             margin-bottom: 10px;
         }
+        
+    @media (max-width: 480px) {
+
+    .container {
+        padding: 25px 15px;
+        margin: 40px auto;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    p {
+        font-size: 14px;
+    }
+
+    button {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .otp-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .otp-group button {
+        width: 100% !important;
+    }
+}
     </style>
 </head>
 
