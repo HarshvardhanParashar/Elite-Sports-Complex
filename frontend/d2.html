@@ -29,8 +29,8 @@
         </nav>
     </aside>
 
-<main class="main-content">
-    <div class="dashboard-container" style=" margin: 0 auto; width: 100%;">
+    <main class="main-content" style="margin-left: 240px; width: calc(100% - 240px); padding: 20px;">
+        <div class="dashboard-container" style=" margin: 0 auto; width: 100%;">
 
             <div class="top-header">
                 <div class="user-info" id="userMenu">
@@ -76,7 +76,7 @@
         </div>
 
         <div class="grid-middle">
-            <div id="weather-card" style="background: #2563eb;padding: 32px; border-radius: 40px; color: #fff; 
+            <div id="weather-card" style="background: #2563eb; width: 380px; padding: 32px; border-radius: 40px; color: #fff; 
                 box-shadow: 0 8px 32px rgba(0,0,0,0.15); font-family: 'Segoe UI', Arial, sans-serif; opacity: 0;
                 transition: opacity 0.5s;">
                 <h2 style="font-size: 2em; font-weight: 500; margin-bottom: 48px;" id="city-name">Detecting
@@ -160,8 +160,63 @@
         </div>
 
     </main>
+    <button id="sidebarToggle" style="
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 1.2em;
+    display: none;
+">
+        <i class="fas fa-bars"></i>
+    </button>
 </body>
 <script src="All.js"></script>
+<script>
+    // Sidebar toggle logic
+    const sidebar = document.querySelector('aside.sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+
+    function toggleSidebar() {
+        if (sidebar.classList.contains('show')) {
+            sidebar.classList.remove('show');
+            sidebar.classList.add('hide');
+        } else {
+            sidebar.classList.add('show');
+            sidebar.classList.remove('hide');
+        }
+    }
+
+    toggleBtn.addEventListener('click', toggleSidebar);
+
+    // Hide sidebar on nav click (mobile)
+    document.querySelectorAll('.side-nav a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 600) {
+                sidebar.classList.remove('show');
+                sidebar.classList.add('hide');
+            }
+        });
+    });
+
+    // On page load, ensure sidebar is hidden on mobile
+    function handleResize() {
+        if (window.innerWidth <= 600) {
+            sidebar.classList.add('hide');
+            sidebar.classList.remove('show');
+        } else {
+            sidebar.classList.remove('hide');
+            sidebar.classList.remove('show');
+        }
+    }
+    window.addEventListener('resize', handleResize);
+    handleResize();
+</script>
 <script>
 
     function slotHasPassed(time) {
