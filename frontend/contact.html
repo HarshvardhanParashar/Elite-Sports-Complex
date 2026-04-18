@@ -96,6 +96,116 @@
                 grid-column: span 1;
             }
         }
+
+        /* Responsive adjustments for contact page */
+        @media (max-width: 900px) {
+            .dashboard-container {
+                padding: 0 !important;
+            }
+
+            .w-full.p-6 {
+                padding: 16px !important;
+            }
+
+            .flex-row {
+                flex-direction: column !important;
+                gap: 0 !important;
+            }
+
+            .flex-1 {
+                width: 100% !important;
+                min-width: 0 !important;
+                margin-bottom: 18px;
+            }
+
+            .card.message-form {
+                min-width: 0 !important;
+                padding: 18px !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                padding: 8px !important;
+            }
+
+            aside.sidebar {
+                display: none !important;
+            }
+
+            .dashboard-container {
+                width: 100% !important;
+                padding: 0 !important;
+            }
+
+            .w-full.p-6,
+            .card.message-form {
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                padding: 10px !important;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 16px !important;
+                padding: 10px !important;
+            }
+
+            h1,
+            h3,
+            .text-xl {
+                font-size: 1.1em !important;
+            }
+
+            .submit-btn {
+                width: 100% !important;
+                padding: 12px 0 !important;
+                font-size: 1em !important;
+            }
+        }
+
+        aside.sidebar {
+            transition: left 0.3s;
+            z-index: 1000;
+        }
+
+        aside.sidebar.hide {
+            left: -260px !important;
+        }
+
+        @media (max-width: 600px) {
+            aside.sidebar {
+                left: -260px;
+                position: fixed;
+                top: 0;
+                height: 100vh;
+                width: 240px;
+                box-shadow: 2px 0 8px #0002;
+                background: #fff;
+                transition: left 0.3s;
+                display: block !important;
+            }
+
+            aside.sidebar.show {
+                left: 0 !important;
+            }
+
+            #sidebarToggle {
+                display: block !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+            }
+        }
     </style>
 </head>
 
@@ -224,7 +334,61 @@
             </form>
         </div>
     </main>
+    <button id="sidebarToggle" style="
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 1.2em;
+    display: none;
+">
+        <i class="fa fa-bars"></i>
+    </button>
 </body>
 <script src="All.js"></script>
+<script>
+    const sidebar = document.querySelector('aside.sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+
+    function toggleSidebar() {
+        if (sidebar.classList.contains('show')) {
+            sidebar.classList.remove('show');
+            sidebar.classList.add('hide');
+        } else {
+            sidebar.classList.add('show');
+            sidebar.classList.remove('hide');
+        }
+    }
+
+    toggleBtn.addEventListener('click', toggleSidebar);
+
+    // Optional: Hide sidebar when clicking a nav-link (for mobile UX)
+    document.querySelectorAll('.side-nav a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 600) {
+                sidebar.classList.remove('show');
+                sidebar.classList.add('hide');
+            }
+        });
+    });
+
+    // On page load, ensure sidebar is hidden on mobile
+    function handleResize() {
+        if (window.innerWidth <= 600) {
+            sidebar.classList.add('hide');
+            sidebar.classList.remove('show');
+        } else {
+            sidebar.classList.remove('hide');
+            sidebar.classList.remove('show');
+        }
+    }
+    window.addEventListener('resize', handleResize);
+    handleResize();
+</script>
 
 </html>
