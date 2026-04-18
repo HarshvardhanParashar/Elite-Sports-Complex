@@ -13,7 +13,10 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+const path = require("path");
 
+// Serve frontend folder
+app.use(express.static(path.join(__dirname, "frontend")));
 const dns = require('dns');
 dns.setDefaultResultOrder('ipv4first');
 
@@ -302,7 +305,7 @@ app.get("/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/" }),
     (req, res) => {
         // redirect to your frontend after login
-        res.redirect(`https://elite-sports-complex.onrender.com/frontend/d2.html?email=${req.user.email}&name=${req.user.name}`);
+        res.redirect(`/d2.html?email=${req.user.email}&name=${req.user.name}`);   
     }
 );
 app.get("/user-coins/:email", async (req, res) => {
