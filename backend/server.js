@@ -305,7 +305,7 @@ app.get("/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/" }),
     (req, res) => {
         // redirect to your frontend after login
-        res.redirect(`/d2.html?email=${req.user.email}&name=${req.user.name}`);   
+    res.redirect(`https://your-project.vercel.app/d2.html?email=${req.user.email}&name=${req.user.name}`);
     }
 );
 app.get("/user-coins/:email", async (req, res) => {
