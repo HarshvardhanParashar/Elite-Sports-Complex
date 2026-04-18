@@ -29,7 +29,7 @@
         </nav>
     </aside>
 
-    <main class="main-content" style="margin-left: 240px; width: calc(100% - 240px); padding: 20px;">
+    <main class="main-content">
         <div class="dashboard-container" style=" margin: 0 auto; width: 100%;">
 
             <div class="top-header">
@@ -189,7 +189,7 @@
                         style="margin-top: 8px; margin-bottom: 20px; width: 200px;">
                 </div>
                 <div id="player-details"
-                    style="width: 800px;padding:25px 20px; background-color: #f9fafb; border-radius: 10px; display:none;">
+                    style="padding:25px 20px; background-color: #f9fafb; border-radius: 10px; display:none;">
                 </div>
                 <div class="btn-group">
                     <button id="back-btn-3" class="btn btn-back">Back</button>
@@ -381,10 +381,14 @@
 
 </script>
 <style>
-    #bookingsList {
-        margin-top: 200px;
-    }
-
+    input, select {
+    width: 100%;
+    max-width: 100%;
+}
+  #bookingsList {
+    margin-top: 40px;
+    margin-left: 0;
+}
     /* Card */
     .booking-card {
         background: #ffffff;
@@ -406,7 +410,16 @@
         align-items: center;
         margin-bottom: 15px;
     }
+.date-time-row {
+    display: flex;
+    gap: 20px;
+}
 
+@media (max-width: 768px) {
+    .date-time-row {
+        flex-direction: column;
+    }
+}
     /* Title */
     .booking-title {
         display: flex;
@@ -426,10 +439,9 @@
 
     /* Details */
     .booking-details {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-    }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
 
     /* Label */
     .label {
@@ -560,11 +572,14 @@
         position: relative;
     }
 
-    .sport-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-    }
+.sport-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+    #player-details {
+    width: 100%;
+}
 
     .sport-card {
         border: 2px solid #e5e7eb;
@@ -671,20 +686,31 @@
         color: #374151;
         line-height: 1.6;
     }
-
-    /* Cancel button */
-    .cancel-btn {
-        background: #fee2e2;
-        color: #dc2626;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 6px;
-        cursor: pointer;
+@media (max-width: 768px) {
+    .stepper-wrapper {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
     }
 
-    .cancel-btn:hover {
-        background: #fecaca;
+    .line {
+        display: none;
     }
+
+    .step-container {
+        flex-direction: row;
+        gap: 10px;
+    }
+     .btn-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
 </style>
 
 </html>
