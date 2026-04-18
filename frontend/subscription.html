@@ -125,7 +125,21 @@
 
         </div>
     </main>
-
+    <button id="sidebarToggle" style="
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 1.2em;
+    display: none;
+">
+        <i class="fas fa-bars"></i>
+    </button>
 </body>
 <script>
     async function loadCoins() {
@@ -180,7 +194,45 @@
         }
         window.addEventListener('mousemove', showPaymentPopover, { once: true });
     }
-    
+
+    // Sidebar toggle logic
+    const sidebar = document.querySelector('aside.sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+
+    function toggleSidebar() {
+        if (sidebar.classList.contains('show')) {
+            sidebar.classList.remove('show');
+            sidebar.classList.add('hide');
+        } else {
+            sidebar.classList.add('show');
+            sidebar.classList.remove('hide');
+        }
+    }
+
+    toggleBtn.addEventListener('click', toggleSidebar);
+
+    // Hide sidebar on nav click (mobile)
+    document.querySelectorAll('.side-nav a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 600) {
+                sidebar.classList.remove('show');
+                sidebar.classList.add('hide');
+            }
+        });
+    });
+
+    // On page load, ensure sidebar is hidden on mobile
+    function handleResize() {
+        if (window.innerWidth <= 600) {
+            sidebar.classList.add('hide');
+            sidebar.classList.remove('show');
+        } else {
+            sidebar.classList.remove('hide');
+            sidebar.classList.remove('show');
+        }
+    }
+    window.addEventListener('resize', handleResize);
+    handleResize();
 </script>
 <script src="All.js"></script>
 <style>
@@ -262,6 +314,117 @@
         background-color: #2563eb;
         color: #fff;
         transition: background 0.3s, color 0.3s;
+    }
+
+    /* Sidebar toggle and responsive */
+    aside.sidebar {
+        transition: left 0.3s;
+        z-index: 1000;
+    }
+
+    aside.sidebar.hide {
+        left: -260px !important;
+    }
+
+    @media (max-width: 900px) {
+        .dashboard-container {
+            padding: 0 !important;
+        }
+
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+            padding: 10px !important;
+        }
+
+        .balance {
+            width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box;
+        }
+
+        .page-title,
+        .page-title-2 {
+            padding-left: 10px !important;
+        }
+    }
+
+    @media (max-width: 600px) {
+        aside.sidebar {
+            left: -260px;
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 240px;
+            box-shadow: 2px 0 8px #0002;
+            background: #fff;
+            transition: left 0.3s;
+            display: block !important;
+        }
+
+        aside.sidebar.show {
+            left: 0 !important;
+        }
+
+        #sidebarToggle {
+            display: block !important;
+        }
+
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+            padding: 8px !important;
+        }
+
+        .dashboard-container {
+            width: 100% !important;
+            padding: 0 !important;
+        }
+
+        .note {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        .page-title,
+        .page-title-2 {
+            padding-left: 0 !important;
+        }
+    }
+
+    /* Responsive package cards grid */
+    @media (max-width: 1100px) {
+        .dashboard-container>div[style*="flex;"] {
+            flex-wrap: wrap !important;
+            gap: 12px !important;
+        }
+
+        .starter,
+        .popular,
+        .premium,
+        .ultimate {
+            width: 45vw !important;
+            min-width: 180px !important;
+            max-width: 320px !important;
+            margin: 0 auto 12px auto !important;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .dashboard-container>div[style*="flex;"] {
+            flex-direction: column !important;
+            align-items: center !important;
+        }
+
+        .starter,
+        .popular,
+        .premium,
+        .ultimate {
+            width: 95vw !important;
+            min-width: 0 !important;
+            max-width: 400px !important;
+            margin-bottom: 16px !important;
+        }
     }
 </style>
 
