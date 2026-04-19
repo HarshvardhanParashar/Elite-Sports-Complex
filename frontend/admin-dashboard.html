@@ -2,63 +2,113 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="d2.css">
+</head>
 
     <style>
-        body {
-            background: #e6e6f3;
-            font-family: 'Segoe UI', sans-serif;
+        .status {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 20px;
+        .status.upcoming {
+            background: #d1fae5;
+            color: #065f46;
         }
 
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .status.completed {
+            background: #fee2e2;
+            color: #991b1b;
         }
 
-        h2 {
-            margin: 0;
-        }
-
-        .logout-btn {
-            background: #dc3545;
-            border: none;
-            padding: 8px 12px;
-            color: white;
-            border-radius: 6px;
-            cursor: pointer;
+        .status.ongoing {
+            background: #fef3c7;
+            color: #92400e;
         }
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 20px;
             margin: 20px 0;
         }
 
         .card {
-            background: white;
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
             text-align: center;
+            cursor: pointer;
+            transition: 0.25s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Different colors for each box */
+        .card:nth-child(1) {
+            border-left: 5px solid #2563eb;
+        }
+
+        .card:nth-child(2) {
+            border-left: 5px solid #16a34a;
+        }
+
+        .card:nth-child(3) {
+            border-left: 5px solid #dc2626;
+        }
+
+        .card:nth-child(4) {
+            border-left: 5px solid #f59e0b;
         }
 
         .card h3 {
-            margin: 10px 0;
-            color: #555;
+            margin: 5px 0;
+            font-size: 16px;
+            color: #374151;
         }
 
         .card p {
-            font-size: 22px;
+            font-size: 26px;
             font-weight: bold;
-            color: #1a73e8;
+            margin-top: 8px;
+        }
+
+        body {
+            background: #e6e6f3;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1a73e8;
+            color: white;
+            padding: 15px 25px;
+        }
+
+        .navbar button {
+            margin-left: 10px;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
         }
 
         table {
@@ -87,13 +137,26 @@
             border: 1px solid #ccc;
         }
 
-        button.update-btn {
-            background: #1a73e8;
-            color: white;
+        button {
+            padding: 6px 10px;
             border: none;
-            padding: 6px 12px;
             border-radius: 6px;
             cursor: pointer;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .update-btn {
+            background: #1a73e8;
+            color: white;
+        }
+
+        .more-btn {
+            background: #6c757d;
+            color: white;
         }
 
         .toast {
@@ -120,45 +183,117 @@
         .error {
             background: #dc3545;
         }
+
+        /* Booking details inside the More section */
+        .user-bookings-list {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 6px;
+            box-shadow: 0 2px 8px #0001;
+            font-size: 15px;
+        }
+
+        .user-bookings-list b {
+            color: #1a73e8;
+        }
+
+        .user-bookings-list .booking-row {
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .user-bookings-list .booking-row:last-child {
+            border-bottom: none;
+        }
+
+        .user-bookings-list .booking-label {
+            font-weight: 600;
+            color: #374151;
+            margin-right: 4px;
+        }
     </style>
-</head>
 
 <body>
 
-    <div class="container">
-
-        <div class="top-bar">
-            <h2>Admin Dashboard</h2>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h2>Elite Sports Admin</h2>
+        <div>
+            <button onclick="showUsers()">Users</button>
+            <button onclick="showBookings()">Bookings</button>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
+    </div>
 
-        <!-- 🔥 Stats Section -->
-        <div class="stats">
-            <div class="card">
-                <h3>Total Users</h3>
-                <p id="totalUsers">0</p>
-            </div>
+    <div class="container">
 
-            <div class="card">
-                <h3>Total Bookings</h3>
-                <p id="totalBookings">0</p>
-            </div>
-
-            <div class="card">
-                <h3>Total Revenue</h3>
-                <p id="revenue">₹0</p>
-            </div>
-        </div>
-
-        <!-- Users Table -->
+        <!-- USERS TABLE -->
         <table id="usersTable">
             <tr>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Bookings</th>
                 <th>Coins</th>
                 <th>Action</th>
             </tr>
         </table>
+
+        <!-- BOOKINGS SECTION -->
+        <div id="bookingsSection" style="display:none; margin-top:30px;">
+
+            <h3>Bookings Management</h3>
+
+            <!-- 🔥 FILTER CARDS -->
+            <div class="stats">
+                <div class="card" onclick="filterBookings('today')">
+                    <h3>Today</h3>
+                    <p id="todayCount">0</p>
+                </div>
+
+                <div class="card" onclick="filterBookings('upcoming')">
+                    <h3>Upcoming</h3>
+                    <p id="upcomingCount">0</p>
+                </div>
+
+                <div class="card" onclick="filterBookings('completed')">
+                    <h3>Completed</h3>
+                    <p id="completedCount">0</p>
+                </div>
+
+                <div class="card" onclick="filterBookings('ongoing')">
+                    <h3>Ongoing</h3>
+                    <p id="ongoingCount">0</p>
+                </div>
+            </div>
+
+            <!-- 🔥 FILTER DROPDOWN -->
+            <div style="margin: 15px 0;">
+                <select onchange="filterBookings(this.value)">
+                    <option value="all">All Bookings</option>
+                    <option value="today">Today</option>
+                    <option value="upcoming">Upcoming</option>
+                    <option value="completed">Completed</option>
+                    <option value="ongoing">Ongoing</option>
+                </select>
+            </div>
+
+            <!-- 🔥 BOOKINGS TABLE -->
+            <table id="bookingsTable">
+                <tr>
+                    <th>User</th>
+                    <th>Sport</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </table>
+
+        </div>
 
     </div>
 
@@ -171,38 +306,108 @@
             window.location.href = "index.html";
         }
 
-        // 🔥 Load Stats
-        fetch("https://elite-sports-complex.onrender.com/admin/stats")
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById("totalUsers").innerText = data.totalUsers;
-                document.getElementById("totalBookings").innerText = data.totalBookings;
-                document.getElementById("revenue").innerText = "₹" + data.revenue;
+        // SHOW USERS
+        function showUsers() {
+            document.getElementById("usersTable").style.display = "table";
+            document.getElementById("bookingsSection").style.display = "none";
+        }
+
+        // SHOW BOOKINGS (for next step)
+        function showBookings() {
+            document.getElementById("bookingsSection").style.display = "block";
+            document.getElementById("usersTable").style.display = "none";
+            loadBookings();
+        }
+
+        // LOAD USERS + BOOKINGS COUNT
+        async function loadUsers() {
+            const usersRes = await fetch("https://elite-sports-complex.onrender.com/admin/users");
+            const usersData = await usersRes.json();
+
+            const bookingsRes = await fetch("https://elite-sports-complex.onrender.com/admin/all-bookings");
+            const bookingsData = await bookingsRes.json();
+
+            const table = document.getElementById("usersTable");
+
+            table.innerHTML = `
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Bookings</th>
+                    <th>Coins</th>
+                    <th>Action</th>
+                </tr>
+            `;
+
+            usersData.users.forEach(user => {
+                const userBookings = bookingsData.bookings.filter(
+                    b => b.email === user.email
+                );
+
+                const row = `
+                <tr>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${userBookings.length}</td>
+                    <td>
+                        <input type="number" id="coins-${user.email}" value="${user.coins}">
+                    </td>
+                    <td>
+                        <button class="update-btn" onclick="updateCoins('${user.email}')">Update</button>
+                        <button class="more-btn" onclick="toggleUserBookings('${user.email}')">More</button>
+                    </td>
+                </tr>
+
+                <tr id="user-bookings-${user.email}" style="display:none;">
+                    <td colspan="5">
+                        <div id="details-${user.email}" style="text-align:left;"></div>
+                    </td>
+                </tr>
+                `;
+
+                table.innerHTML += row;
             });
+        }
 
-        // Load users
-        fetch("https://elite-sports-complex.onrender.com/admin/users")
-            .then(res => res.json())
-            .then(data => {
-                const table = document.getElementById("usersTable");
+        // TOGGLE USER BOOKINGS
+        function toggleUserBookings(email) {
+            const row = document.getElementById(`user-bookings-${email}`);
+            const container = document.getElementById(`details-${email}`);
 
-                data.users.forEach(user => {
-                    const row = `
-        <tr>
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td>
-                <input type="number" id="coins-${user.email}" value="${user.coins}">
-            </td>
-            <td>
-                <button class="update-btn" onclick="updateCoins('${user.email}')">Update</button>
-            </td>
-        </tr>`;
-                    table.innerHTML += row;
-                });
-            });
+            if (row.style.display === "none") {
+                row.style.display = "table-row";
 
-        // Update coins
+                fetch("https://elite-sports-complex.onrender.com/admin/all-bookings")
+                    .then(res => res.json())
+                    .then(data => {
+                        const bookings = data.bookings.filter(b => b.email === email);
+
+                        if (bookings.length === 0) {
+                            container.innerHTML = "<div class='user-bookings-list'>No bookings</div>";
+                            return;
+                        }
+
+                        let html = `<div class="user-bookings-list"><b>User Bookings:</b><br><br>`;
+                        bookings.forEach(b => {
+                            html += `
+                                <div class="booking-row">
+                                    <span class="booking-label">Sport:</span> ${b.sport}
+                                    <span class="booking-label">Date:</span> ${b.date}
+                                    <span class="booking-label">Time:</span> ${b.time}
+                                    <span class="booking-label">Players:</span> ${b.players}
+                                </div>
+                            `;
+                        });
+                        html += `</div>`;
+                        container.innerHTML = html;
+                    });
+
+            } else {
+                row.style.display = "none";
+            }
+        }
+
+        // UPDATE COINS
         function updateCoins(userEmail) {
             const coins = document.getElementById(`coins-${userEmail}`).value;
 
@@ -222,7 +427,7 @@
                 });
         }
 
-        // Toast
+        // TOAST
         function showToast(message, type) {
             const toast = document.getElementById("toast");
             toast.innerText = message;
@@ -233,10 +438,125 @@
             }, 3000);
         }
 
-        // Logout
+        // LOGOUT
         function logout() {
             localStorage.removeItem("adminEmail");
             window.location.href = "index.html";
+        }
+
+        // INIT
+        loadUsers();
+
+        let allBookings = [];
+
+        // Load bookings
+        async function loadBookings() {
+            const res = await fetch("https://elite-sports-complex.onrender.com/admin/all-bookings");
+            const data = await res.json();
+
+            allBookings = data.bookings;
+
+            calculateStats();
+            filterBookings("all");
+        }
+
+        // 🔥 Convert time slot to real hour
+        function getStartHour(time) {
+            let [start] = time.split("-").map(Number);
+
+            if (start >= 1 && start <= 4) start += 12; // convert PM
+            return start;
+        }
+
+        // 🔥 Get booking status
+        function getStatus(booking) {
+            const now = new Date();
+
+            const bookingDate = new Date(booking.date);
+            const startHour = getStartHour(booking.time);
+
+            if (bookingDate.toDateString() === now.toDateString()) {
+                if (startHour === now.getHours()) return "ongoing";
+                if (startHour > now.getHours()) return "upcoming";
+                return "completed";
+            }
+
+            if (bookingDate > now) return "upcoming";
+            return "completed";
+        }
+
+        // 🔥 Calculate counts
+        function calculateStats() {
+            let today = 0, upcoming = 0, completed = 0, ongoing = 0;
+
+            const now = new Date();
+
+            allBookings.forEach(b => {
+                const status = getStatus(b);
+
+                if (new Date(b.date).toDateString() === now.toDateString()) {
+                    today++;
+                }
+
+                if (status === "upcoming") upcoming++;
+                if (status === "completed") completed++;
+                if (status === "ongoing") ongoing++;
+            });
+
+            document.getElementById("todayCount").innerText = today;
+            document.getElementById("upcomingCount").innerText = upcoming;
+            document.getElementById("completedCount").innerText = completed;
+            document.getElementById("ongoingCount").innerText = ongoing;
+        }
+
+        // 🔥 Filter bookings
+        function filterBookings(type) {
+            const table = document.getElementById("bookingsTable");
+
+            table.innerHTML = `
+        <tr>
+            <th>User</th>
+            <th>Sport</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+        </tr>
+    `;
+
+            const now = new Date();
+
+            const filtered = allBookings.filter(b => {
+                const status = getStatus(b);
+
+                if (type === "all") return true;
+
+                if (type === "today") {
+                    return new Date(b.date).toDateString() === now.toDateString();
+                }
+
+                return status === type;
+            });
+
+            filtered.forEach(b => {
+                const row = `
+        <tr>
+            <td>
+                <div style="text-align:left;">
+                    <div style="font-weight:600;">${b.name}</div>
+                    <div style="font-size:12px; color:#6b7280;">${b.email}</div>
+                </div>
+            </td>
+                <td>${b.sport}</td>
+            <td>${b.date}</td>
+            <td>${b.time}</td>
+            <td>
+                <span class="status ${getStatus(b)}">${getStatus(b)}</span>
+            </td>
+        </tr>
+        `;
+
+                table.innerHTML += row;
+            });
         }
     </script>
 
