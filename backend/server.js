@@ -31,10 +31,6 @@ app.get('/', (req, res) => {
     res.send("Server is running");
 });
 
-// Start server
-// app.listen(5000, () => {
-//     console.log("Server running on port 5000");
-// });
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
@@ -189,6 +185,29 @@ app.get('/my-bookings/:email', async (req, res) => {
             success: false,
             message: "Error fetching bookings"
         });
+    }
+});
+
+app.get("/admin/all-bookings", async (req, res) => {
+    try {
+        const bookings = await Booking.find();
+
+        const enrichedBookings = await Promise.all(
+            bookings.map(async (b) => {
+                const user = await User.findOne({ email: b.email });
+
+                return {
+                    ...b._doc,
+                    name: user ? user.name : "Unknown"
+                };
+            })
+        );
+
+        res.json({ bookings: enrichedBookings });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Server error" });
     }
 });
 
@@ -430,6 +449,77 @@ app.get("/admin/stats", async (req, res) => {
             revenue
         });
 
+    } catch (err) {
+        res.status(500).json({ success: false });
+    }
+});
+app.get("/admin/bookings", async (req, res) => {
+    try {
+        const { sport, date, status, email } = req.query;
+
+        let filter = {};
+
+        if (sport) filter.sport = sport;
+        if (status) filter.status = status;
+        if (email) filter.email = email;
+        if (date) filter.date = date;
+
+        const bookings = await Booking.find(filter).sort({ date: -1 });
+
+        res.json({ success: true, bookings });
+
+    } catch (err) {
+        res.status(500).json({ success: false });
+    }
+});
+app.post("/admin/cancel-booking", verifyAdmin, async (req, res) => {
+    try {
+        const { bookingId } = req.body;
+
+        const booking = await Booking.findById(bookingId);
+        if (!booking) return res.json({ success: false });
+
+        if (booking.status === "cancelled") {
+            return res.json({ success: false, message: "Already cancelled" });
+        }
+
+        // Refund coins
+        const user = await User.findOne({ email: booking.email });
+        user.coins += booking.cost;
+        await user.save();
+
+        booking.status = "cancelled";
+        await booking.save();
+
+        res.json({ success: true, message: "Booking cancelled & refunded" });
+
+    } catch (err) {
+        res.status(500).json({ success: false });
+    }
+});
+app.post("/admin/reschedule-booking", verifyAdmin, async (req, res) => {
+    try {
+        const { bookingId, newDate, newTime } = req.body;
+
+        const booking = await Booking.findById(bookingId);
+        if (!booking) return res.json({ success: false });
+
+        booking.date = newDate;
+        booking.time = newTime;
+        booking.status = "upcoming";
+
+        await booking.save();
+
+        res.json({ success: true, message: "Rescheduled successfully" });
+
+    } catch (err) {
+        res.status(500).json({ success: false });
+    }
+});
+app.delete("/admin/delete-booking/:id", verifyAdmin, async (req, res) => {
+    try {
+        await Booking.findByIdAndDelete(req.params.id);
+        res.json({ success: true, message: "Deleted successfully" });
     } catch (err) {
         res.status(500).json({ success: false });
     }
