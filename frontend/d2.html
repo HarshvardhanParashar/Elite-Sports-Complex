@@ -354,7 +354,7 @@
         return;
     }
     try {
-        const res = await fetch(`http://localhost:5000/booking-count/${email}`);
+        const res = await fetch(`https://elite-sports-complex.onrender.com/booking-count/${email}`);
         const data = await res.json();
         document.getElementById("yourBookingCount").textContent = data.count ?? "0";
     } catch (err) {
