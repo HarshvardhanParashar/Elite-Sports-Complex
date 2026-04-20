@@ -589,3 +589,14 @@ app.post("/contact", async (req, res) => {
         });
     }
 });
+
+// Example: GET /booking-count/:email
+app.get('/booking-count/:email', async (req, res) => {
+    try {
+        const email = req.params.email;
+        const count = await Booking.countDocuments({ email });
+        res.json({ count });
+    } catch (err) {
+        res.status(500).json({ count: 0, error: "Server error" });
+    }
+});
