@@ -348,29 +348,20 @@
     });
 
     async function updateYourBookingsCount() {
-        try {
-            const res = await fetch("https://elite-sports-complex.onrender.com/all-bookings");
-            const data = await res.json();
-
-            const now = new Date();
-            const futureBookings = data.bookings.filter(b => {
-                const [startHour, endHour] = b.time.split("-").map(Number);
-
-                // Convert afternoon slots to 24h (assuming 12-4 PM)
-                let bookingHour = startHour;
-                if (startHour === 12) bookingHour = 12;
-                else if (startHour >= 1 && startHour <= 4) bookingHour += 12;
-
-                const bookingDate = new Date(b.date + "T00:00"); // booking day
-                return bookingDate > now || (bookingDate.toDateString() === now.toDateString() && bookingHour > now.getHours());
-            });
-
-            document.getElementById("yourBookingCount").textContent = futureBookings.length;
-        } catch (err) {
-            console.error("Failed to fetch bookings:", err);
-            document.getElementById("yourBookingCount").textContent = "0";
-        }
+    const email = localStorage.getItem("userEmail");
+    if (!email) {
+        document.getElementById("yourBookingCount").textContent = "0";
+        return;
     }
+    try {
+        const res = await fetch(`http://localhost:5000/booking-count/${email}`);
+        const data = await res.json();
+        document.getElementById("yourBookingCount").textContent = data.count ?? "0";
+    } catch (err) {
+        console.error("Failed to fetch booking count:", err);
+        document.getElementById("yourBookingCount").textContent = "0";
+    }
+}
 
     // Run on page load
     updateYourBookingsCount();
