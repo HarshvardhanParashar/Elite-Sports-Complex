@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Bookings</title>
+    <link rel="stylesheet" href="d2.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f3f4f6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .booking-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .status {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+        }
+
+        .upcoming {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .completed {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .ongoing {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .label {
+            color: #6b7280;
+        }
+
+        #empty {
+            text-align: center;
+            color: #6b7280;
+            margin-top: 50px;
+        }
+
+        @media(max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <button onclick="goBack()" style="
+    background: #eef2ff;
+    color: #2563eb;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+">
+            ⬅ Back
+        </button>
+        <h1>All Bookings</h1>
+        <div id="bookingList"></div>
+        <div id="empty"></div>
+    </div>
+
+    <script>
+
+        function goBack() {
+            if (document.referrer) {
+                window.history.back();
+            } else {
+                window.location.href = "d2.html";
+            }
+        }
+
+        const API = "https://elite-sports-complex.onrender.com"; // ✅ LOCALHOST
+
+        async function loadBookings() {
+            const email = localStorage.getItem("userEmail");
+            const container = document.getElementById("bookingList");
+
+            const res = await fetch(`${API}/my-bookings/${email}`);
+            const data = await res.json();
+
+            container.innerHTML = "";
+
+            if (!data.bookings || data.bookings.length === 0) {
+                document.getElementById("empty").innerText = "No bookings found";
+                return;
+            }
+
+            // Sort latest first
+            data.bookings.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            const now = new Date();
+
+            data.bookings.forEach(b => {
+                const card = document.createElement("div");
+                card.className = "booking-card";
+
+                // 🔥 STATUS LOGIC
+                const [start, end] = b.time.split("-").map(Number);
+
+                // Convert to 24-hour format
+                let startHour = start;
+                let endHour = end;
+
+                if (start >= 1 && start <= 4) startHour += 12; if (end >= 1 && end <= 5) endHour += 12; // Create full datetime objects
+                const startTime = new Date(`${b.date}T${String(startHour).padStart(2, '0')}:00:00`); const endTime = new
+                    Date(`${b.date}T${String(endHour).padStart(2, '0')}:00:00`); const now = new Date(); let status = "Upcoming";
+                if (now >= endTime) {
+                    status = "Completed";
+                }
+                else if (now >= startTime && now < endTime) { status = "Ongoing"; } let statusClass = status === "Completed"
+                    ? "completed" : status === "Ongoing" ? "ongoing" : "upcoming"; card.innerHTML = ` <div class="top">
+                <strong>${b.sport}</strong>
+                <span class="status ${statusClass}">${status}</span>
+                </div>
+
+                <div class="grid">
+                    <div>
+                        <div class="label">Date</div>
+                        <div>${b.date}</div>
+                    </div>
+
+                    <div>
+                        <div class="label">Time</div>
+                        <div>${b.time}</div>
+                    </div>
+
+                    <div>
+                        <div class="label">Players</div>
+                        <div>${b.players}</div>
+                    </div>
+
+                    <div>
+                        <div class="label">Cost</div>
+                        <div>${b.cost} coins</div>
+                    </div>
+                </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        loadBookings();
+    </script>
+
+</body>
+
+</html>
