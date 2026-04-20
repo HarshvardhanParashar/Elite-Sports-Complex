@@ -4,6 +4,7 @@ const session = require("express-session");
 
 const User = require('./User');
 const Booking = require('./Booking');
+const Contact = require('./Contact');
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -522,5 +523,69 @@ app.delete("/admin/delete-booking/:id", verifyAdmin, async (req, res) => {
         res.json({ success: true, message: "Deleted successfully" });
     } catch (err) {
         res.status(500).json({ success: false });
+    }
+});
+app.post("/contact", async (req, res) => {
+    try {
+        const { name, email, phone, subject, message } = req.body;
+
+        if (!name || !email || !message) {
+            return res.status(400).json({
+                success: false,
+                message: "Required fields missing"
+            });
+        }
+
+        // Save to DB
+        const newMessage = new Contact({
+            name,
+            email,
+            phone,
+            subject,
+            message
+        });
+
+        await newMessage.save();
+
+        //  Send Email to YOU
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_USER,
+            subject: `📩 New Contact: ${subject || "No Subject"}`,
+            html: `
+                <h3>New Contact Message</h3>
+                <p><b>Name:</b> ${name}</p>
+                <p><b>Email:</b> ${email}</p>
+                <p><b>Phone:</b> ${phone}</p>
+                <p><b>Subject:</b> ${subject}</p>
+                <p><b>Message:</b><br>${message}</p>
+            `
+        });
+
+        // Auto reply to user (optional but PRO feature)
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "We received your message ✅",
+            html: `
+                <p>Hi ${name},</p>
+                <p>Thanks for contacting Elite Sports Complex.</p>
+                <p>We have received your message and will respond shortly.</p>
+                <br>
+                <p>— Team Elite Sports</p>
+            `
+        });
+
+        res.json({
+            success: true,
+            message: "Message saved & email sent"
+        });
+
+    } catch (err) {
+        console.error("CONTACT ERROR:", err);
+        res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
     }
 });
