@@ -38,9 +38,8 @@
                     <div class="user-circle" id="userCircle"></div>
                     <span id="dropdownArrow" style=" transition: transform 0.3s; display: inline-block;">▾</span>
                     <div id="profileDropdown" class="user-dropdown">
-                        <a href="#"><span>👤</span>Profile</a>
-                        <a href="#"><span>⚙️</span>Settings</a>
                         <hr style=" border: 0; border-top: 1px solid #eee; margin: 0;">
+                        <a href="allbookings.html" class="nav-link">📜 All Bookings</a>
                         <a href="login.html" style="color: red;"><span>🚪</span>Logout</a>
                     </div>
                 </div>
@@ -351,15 +350,17 @@
 
     @media (max-width: 600px) {
         aside.sidebar {
-            left: -260px;
+            left: -100vw;
             position: fixed;
             top: 0;
             height: 100vh;
-            width: 240px;
+            width: 100vw !important;
+            max-width: fit-content !important;
             box-shadow: 2px 0 8px #0002;
             background: #fff;
             transition: left 0.3s;
             display: block !important;
+            z-index: 1102;
         }
 
         aside.sidebar.show {
