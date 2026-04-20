@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookings</title>
     <link rel="stylesheet" href="d2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -29,7 +30,7 @@
         </nav>
     </aside>
 
-    <main class="main-content">
+    <main class="main-content" style="margin-left: 240px; width: calc(100% - 240px); padding: 20px;">
         <div class="dashboard-container" style=" margin: 0 auto; width: 100%;">
 
             <div class="top-header">
@@ -38,9 +39,8 @@
                     <div class="user-circle" id="userCircle"></div>
                     <span id="dropdownArrow" style=" transition: transform 0.3s; display: inline-block;">▾</span>
                     <div id="profileDropdown" class="user-dropdown">
-                        <a href="#"><span>👤</span>Profile</a>
-                        <a href="#"><span>⚙️</span>Settings</a>
                         <hr style=" border: 0; border-top: 1px solid #eee; margin: 0;">
+                        <a href="allbookings.html" class="nav-link">📜 All Bookings</a>
                         <a href="#" style="color: red;"><span>🚪</span>Logout</a>
                     </div>
                 </div>
@@ -170,7 +170,6 @@
                             <option value="1-2">1:00 PM - 2:00 PM</option>
                             <option value="2-3">2:00 PM - 3:00 PM</option>
                             <option value="3-4">3:00 PM - 4:00 PM</option>
-                            <option value="4-5">4:00 PM - 5:00 PM</option>
                         </select>
                     </div>
                 </div>
@@ -189,7 +188,7 @@
                         style="margin-top: 8px; margin-bottom: 20px; width: 200px;">
                 </div>
                 <div id="player-details"
-                    style="padding:25px 20px; background-color: #f9fafb; border-radius: 10px; display:none;">
+                    style="width: 800px;padding:25px 20px; background-color: #f9fafb; border-radius: 10px; display:none;">
                 </div>
                 <div class="btn-group">
                     <button id="back-btn-3" class="btn btn-back">Back</button>
@@ -227,9 +226,64 @@
         <div id="bookingsList"></div>
 
     </main>
+    <button id="sidebarToggle" style="
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 1.2em;
+    display: none;
+">
+        <i class="fas fa-bars"></i>
+    </button>
+
 </body>
+
 <script src=" All.js"></script>
 <script>
+    // Sidebar toggle logic
+    const sidebar = document.querySelector('aside.sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+
+    function toggleSidebar() {
+        if (sidebar.classList.contains('show')) {
+            sidebar.classList.remove('show');
+            sidebar.classList.add('hide');
+        } else {
+            sidebar.classList.add('show');
+            sidebar.classList.remove('hide');
+        }
+    }
+
+    toggleBtn.addEventListener('click', toggleSidebar);
+
+    // Hide sidebar on nav click (mobile)
+    document.querySelectorAll('.side-nav a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 600) {
+                sidebar.classList.remove('show');
+                sidebar.classList.add('hide');
+            }
+        });
+    });
+
+    // On page load, ensure sidebar is hidden on mobile
+    function handleResize() {
+        if (window.innerWidth <= 600) {
+            sidebar.classList.add('hide');
+            sidebar.classList.remove('show');
+        } else {
+            sidebar.classList.remove('hide');
+            sidebar.classList.remove('show');
+        }
+    }
+    window.addEventListener('resize', handleResize);
+    handleResize();
     let selectedSport = "";
     async function loadCoins() {
         const email = localStorage.getItem("userEmail");
@@ -381,14 +435,19 @@
 
 </script>
 <style>
-    input, select {
-    width: 100%;
-    max-width: 100%;
-}
-  #bookingsList {
-    margin-top: 40px;
-    margin-left: 0;
-}
+    aside.sidebar {
+        transition: left 0.3s;
+        z-index: 1000;
+    }
+
+    aside.sidebar.hide {
+        left: -260px !important;
+    }
+
+    #bookingsList {
+        margin-top: 200px;
+    }
+
     /* Card */
     .booking-card {
         background: #ffffff;
@@ -410,16 +469,7 @@
         align-items: center;
         margin-bottom: 15px;
     }
-.date-time-row {
-    display: flex;
-    gap: 20px;
-}
 
-@media (max-width: 768px) {
-    .date-time-row {
-        flex-direction: column;
-    }
-}
     /* Title */
     .booking-title {
         display: flex;
@@ -439,9 +489,10 @@
 
     /* Details */
     .booking-details {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-}
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+    }
 
     /* Label */
     .label {
@@ -572,14 +623,11 @@
         position: relative;
     }
 
-.sport-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-}
-    #player-details {
-    width: 100%;
-}
+    .sport-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
 
     .sport-card {
         border: 2px solid #e5e7eb;
@@ -621,10 +669,6 @@
         margin-left: 20px;
     }
 
-    /* Each booking item */
-
-
-    /* Hover effect (same feel as cards) */
     #bookingsList div:hover {
         background-color: #f9fafb;
     }
@@ -686,31 +730,98 @@
         color: #374151;
         line-height: 1.6;
     }
-@media (max-width: 768px) {
-    .stepper-wrapper {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
+
+    @media (max-width: 900px) {
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+            padding: 10px !important;
+        }
+
+        .dashboard-container {
+            width: 100% !important;
+            padding: 0 !important;
+        }
+
+        .sport-grid {
+            grid-template-columns: 1fr 1fr !important;
+            gap: 1rem !important;
+        }
     }
 
-    .line {
-        display: none;
-    }
+    @media (max-width: 600px) {
+        aside.sidebar {
+            left: -100vw;
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 100vw !important;
+            max-width: fit-content !important;
+            box-shadow: 2px 0 8px #0002;
+            background: #fff;
+            transition: left 0.3s;
+            display: block !important;
+            z-index: 1102;
+        }
 
-    .step-container {
-        flex-direction: row;
-        gap: 10px;
-    }
-     .btn-group {
-        flex-direction: column;
-        gap: 10px;
-    }
+        aside.sidebar.show {
+            left: 0 !important;
+        }
 
-    .btn {
-        width: 100%;
-        justify-content: center;
+        #sidebarToggle {
+            display: block !important;
+        }
+
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+            padding: 8px !important;
+        }
+
+        .dashboard-container {
+            width: 100% !important;
+            padding: 0 !important;
+        }
+
+        .form-content-card {
+            padding: 1rem !important;
+            min-height: unset !important;
+        }
+
+        .sport-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
+        }
+
+        .booking-details {
+            grid-template-columns: 1fr !important;
+            gap: 8px !important;
+        }
+
+        #bookingsList {
+            margin-top: 30px !important;
+            margin-left: 0 !important;
+        }
+
+        .booking-card {
+            padding: 16px 8px !important;
+            margin-bottom: 18px !important;
+            margin-left: 0 !important;
+            margin-top: 0 !important;
+        }
+
+        .btn-group {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input,
+        select {
+            min-width: 0 !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
     }
-}
 </style>
 
 </html>
