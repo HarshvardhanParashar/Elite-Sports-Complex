@@ -133,7 +133,7 @@
             border: 1px solid #ccc;
         }
 
-        button {
+        button,a {
             padding: 6px 10px;
             border: none;
             border-radius: 6px;
@@ -223,7 +223,7 @@
         <div>
             <button onclick="showUsers()">Users</button>
             <button onclick="showBookings()">Bookings</button>
-            <button class="logout-btn" onclick="logout()">Logout</button>
+            <a href="login.html" class="logout-btn">Logout</a>
         </div>
     </div>
 
@@ -433,12 +433,6 @@
             setTimeout(() => {
                 toast.className = "toast";
             }, 3000);
-        }
-
-        // LOGOUT
-        function logout() {
-            localStorage.removeItem("adminEmail");
-            window.location.href = "index.html";
         }
 
         // INIT
