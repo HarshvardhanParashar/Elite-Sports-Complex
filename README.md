@@ -56,3 +56,9 @@ The platform includes weather forecasting support to help users plan outdoor spo
 The project follows a modular MERN stack architecture where authentication, sports bookings, event management, and weather services are handled through separate backend modules and organized frontend components.
 
 ## Screenshots
+![Home Page](screenshots/Homepage.png)
+![Login Page](screenshots/login.png)
+![Dashboard](screenshots/Dashboard.png)
+![Booking](screenshots/Booking.png)
+![Subscription](screenshots/Subscription.png)
+![Contact Us](screenshots/ContactUs.png)
