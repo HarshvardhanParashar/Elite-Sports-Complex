@@ -57,8 +57,24 @@ The project follows a modular MERN stack architecture where authentication, spor
 
 ## Screenshots
 ![Home Page](screenshots/Homepage.png)
-![Login Page](screenshots/login.png)
+![Login Page](screenshots/Login.png)
 ![Dashboard](screenshots/Dashboard.png)
 ![Booking](screenshots/Booking.png)
 ![Subscription](screenshots/Subscription.png)
 ![Contact Us](screenshots/ContactUs.png)
+
+
+## 🤝 Creators
+- Harsh Vardhan Parashar
+- Harshita Sharma
+
+## 📌 Future Enhancements
+- Online Payment Integration
+- Real-time Notifications
+- AI-based Match Recommendations
+- Mobile Application Support
+- Tournament Management System
+- Live Match Score Tracking
+
+## 📄 License
+This project is developed for academic and learning purposes.
