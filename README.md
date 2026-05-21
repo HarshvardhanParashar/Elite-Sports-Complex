@@ -31,7 +31,7 @@ The platform includes weather forecasting support to help users plan outdoor spo
 - Weather conditions for outdoor games
 - Dynamic weather icons
 
-## API Used
+### API Used
 - OpenWeatherMap API
 
 ### Get your API key from:
